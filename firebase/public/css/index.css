@@ -1,0 +1,58 @@
+html, body
+{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+body
+{
+    background: black;
+    color: white;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+#canvas {
+    width: 100%;
+    height: 100%;
+    border: none 0;
+}
+
+#widgets {
+    position:absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#tapListener {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#bitSelector
+{
+    background: black;
+    color: white;
+    border: none 0;
+    font-weight: bold;
+}
+
+#bpm
+{
+    text-align: center;
+    width: 100%;
+    height: 40pt;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -20pt;
+    font-weight: bold;
+    font-size: 38pt;
+}

@@ -1,0 +1,1 @@
+Firebase Hosting Configuration: https://firebase.google.com/docs/hosting/full-config
