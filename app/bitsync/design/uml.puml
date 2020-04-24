@@ -1,0 +1,441 @@
+@startuml
+set namespaceSeparator ::
+
+class "bitsync::blocs::auth::auth_bloc.dart::AuthBloc" {
+  -FirebaseAuth _firebaseAuth
+  -GoogleSignIn _googleSignIn
+  -UserBloc _userBloc
+  -StreamSubscription _profileSubscription
+  +AuthState initialState
+  +Stream mapEventToState()
+  -Stream _updateUserProfile()
+  -void _authWithGoogle()
+  -void _onSignIn()
+  +Future close()
+}
+
+"bitsync::blocs::auth::auth_bloc.dart::AuthBloc" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"bitsync::blocs::auth::auth_bloc.dart::AuthBloc" o-- "google_sign_in::google_sign_in.dart::GoogleSignIn"
+"bitsync::blocs::auth::auth_bloc.dart::AuthBloc" o-- "bitsync::blocs::user::user_bloc.dart::UserBloc"
+"bitsync::blocs::auth::auth_bloc.dart::AuthBloc" o-- "dart::async::StreamSubscription"
+"bitsync::blocs::auth::auth_bloc.dart::AuthBloc" o-- "bitsync::blocs::auth::auth_state.dart::AuthState"
+"bloc::src::bloc.dart::Bloc<Event, State>" <|-- "bitsync::blocs::auth::auth_bloc.dart::AuthBloc"
+
+abstract class "bitsync::blocs::auth::auth_event.dart::AuthEvent" {
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "bitsync::blocs::auth::auth_event.dart::AuthEvent"
+
+class "bitsync::blocs::auth::auth_event.dart::AuthEventInitialize" {
+  +List<Object> props
+}
+
+"bitsync::blocs::auth::auth_event.dart::AuthEvent" <|-- "bitsync::blocs::auth::auth_event.dart::AuthEventInitialize"
+
+class "bitsync::blocs::auth::auth_event.dart::AuthEventRequestSignOut" {
+  +List<Object> props
+}
+
+"bitsync::blocs::auth::auth_event.dart::AuthEvent" <|-- "bitsync::blocs::auth::auth_event.dart::AuthEventRequestSignOut"
+
+class "bitsync::blocs::auth::auth_event.dart::AuthEventRequestSignInWithGoogle" {
+  +List<Object> props
+}
+
+"bitsync::blocs::auth::auth_event.dart::AuthEvent" <|-- "bitsync::blocs::auth::auth_event.dart::AuthEventRequestSignInWithGoogle"
+
+class "bitsync::blocs::auth::auth_event.dart::AuthEventError" {
+  +Exception error
+  +String authType
+  +List<Object> props
+}
+
+"bitsync::blocs::auth::auth_event.dart::AuthEvent" <|-- "bitsync::blocs::auth::auth_event.dart::AuthEventError"
+
+class "bitsync::blocs::auth::auth_event.dart::AuthEventSignedIn" {
+  +User user
+  +List<Object> props
+}
+
+"bitsync::blocs::auth::auth_event.dart::AuthEventSignedIn" o-- "bitsync::data::user.dart::User"
+"bitsync::blocs::auth::auth_event.dart::AuthEvent" <|-- "bitsync::blocs::auth::auth_event.dart::AuthEventSignedIn"
+
+class "bitsync::blocs::auth::auth_event.dart::AuthEventRequestUpdateProfile" {
+  +String uid
+  +String nickname
+  +File photo
+  +List<Object> props
+}
+
+"bitsync::blocs::auth::auth_event.dart::AuthEventRequestUpdateProfile" o-- "dart::io::File"
+"bitsync::blocs::auth::auth_event.dart::AuthEvent" <|-- "bitsync::blocs::auth::auth_event.dart::AuthEventRequestUpdateProfile"
+
+abstract class "bitsync::blocs::auth::auth_state.dart::AuthState" {
+  +bool isSameAuthState()
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "bitsync::blocs::auth::auth_state.dart::AuthState"
+
+class "bitsync::blocs::auth::auth_state.dart::AuthStateInitial" {
+  +List<Object> props
+}
+
+"bitsync::blocs::auth::auth_state.dart::AuthState" <|-- "bitsync::blocs::auth::auth_state.dart::AuthStateInitial"
+
+abstract class "bitsync::blocs::auth::auth_state.dart::AuthStateUID" {
+  +String uid
+  +bool isSameAuthState()
+}
+
+"bitsync::blocs::auth::auth_state.dart::AuthState" <|-- "bitsync::blocs::auth::auth_state.dart::AuthStateUID"
+
+class "bitsync::blocs::auth::auth_state.dart::AuthStateLoading" {
+  +List<Object> props
+}
+
+"bitsync::blocs::auth::auth_state.dart::AuthState" <|-- "bitsync::blocs::auth::auth_state.dart::AuthStateLoading"
+
+class "bitsync::blocs::auth::auth_state.dart::AuthStateSignedOut" {
+  +List<Object> props
+}
+
+"bitsync::blocs::auth::auth_state.dart::AuthState" <|-- "bitsync::blocs::auth::auth_state.dart::AuthStateSignedOut"
+
+class "bitsync::blocs::auth::auth_state.dart::AuthStateSignedIn" {
+  +User user
+  +List<Object> props
+  +String uid
+}
+
+"bitsync::blocs::auth::auth_state.dart::AuthStateSignedIn" o-- "bitsync::data::user.dart::User"
+"bitsync::blocs::auth::auth_state.dart::AuthStateUID" <|-- "bitsync::blocs::auth::auth_state.dart::AuthStateSignedIn"
+
+class "bitsync::blocs::auth::auth_state.dart::AuthStateUpdating" {
+  +AuthEventRequestUpdateProfile previousEvent
+  +List<Object> props
+  +String uid
+}
+
+"bitsync::blocs::auth::auth_state.dart::AuthStateUpdating" o-- "bitsync::blocs::auth::auth_event.dart::AuthEventRequestUpdateProfile"
+"bitsync::blocs::auth::auth_state.dart::AuthStateUID" <|-- "bitsync::blocs::auth::auth_state.dart::AuthStateUpdating"
+
+class "bitsync::blocs::auth::auth_state.dart::AuthStateError" {
+  +Exception error
+  +String authType
+  +List<Object> props
+}
+
+"bitsync::blocs::auth::auth_state.dart::AuthState" <|-- "bitsync::blocs::auth::auth_state.dart::AuthStateError"
+
+abstract class "bitsync::blocs::fstest_bloc.dart::FSTestEvent" {
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "bitsync::blocs::fstest_bloc.dart::FSTestEvent"
+
+class "bitsync::blocs::fstest_bloc.dart::FSTestEventInitialize" {
+  +List<Object> props
+}
+
+"bitsync::blocs::fstest_bloc.dart::FSTestEvent" <|-- "bitsync::blocs::fstest_bloc.dart::FSTestEventInitialize"
+
+class "bitsync::blocs::fstest_bloc.dart::FSTestEventUpdated" {
+  +int value
+  +List<Object> props
+}
+
+"bitsync::blocs::fstest_bloc.dart::FSTestEvent" <|-- "bitsync::blocs::fstest_bloc.dart::FSTestEventUpdated"
+
+class "bitsync::blocs::fstest_bloc.dart::FSTestEventUpload" {
+  +int value
+  +List<Object> props
+}
+
+"bitsync::blocs::fstest_bloc.dart::FSTestEvent" <|-- "bitsync::blocs::fstest_bloc.dart::FSTestEventUpload"
+
+abstract class "bitsync::blocs::fstest_bloc.dart::FSTestState" {
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "bitsync::blocs::fstest_bloc.dart::FSTestState"
+
+class "bitsync::blocs::fstest_bloc.dart::FSTestStateInitial" {
+  +List<Object> props
+}
+
+"bitsync::blocs::fstest_bloc.dart::FSTestState" <|-- "bitsync::blocs::fstest_bloc.dart::FSTestStateInitial"
+
+class "bitsync::blocs::fstest_bloc.dart::FSTestStateLoading" {
+  +List<Object> props
+}
+
+"bitsync::blocs::fstest_bloc.dart::FSTestState" <|-- "bitsync::blocs::fstest_bloc.dart::FSTestStateLoading"
+
+class "bitsync::blocs::fstest_bloc.dart::FSTestStateUpdated" {
+  +int value
+  +List<Object> props
+}
+
+"bitsync::blocs::fstest_bloc.dart::FSTestState" <|-- "bitsync::blocs::fstest_bloc.dart::FSTestStateUpdated"
+
+class "bitsync::blocs::fstest_bloc.dart::FSTestBloc" {
+  -DocumentReference _reference
+  -StreamSubscription _subscription
+  +FSTestState initialState
+  +Stream mapEventToState()
+  -void _onData()
+  -void _onError()
+  -void _startListening()
+  -void _stopListening()
+  +Future close()
+}
+
+"bitsync::blocs::fstest_bloc.dart::FSTestBloc" o-- "cloud_firestore::cloud_firestore.dart::DocumentReference"
+"bitsync::blocs::fstest_bloc.dart::FSTestBloc" o-- "dart::async::StreamSubscription"
+"bitsync::blocs::fstest_bloc.dart::FSTestBloc" o-- "bitsync::blocs::fstest_bloc.dart::FSTestState"
+"bloc::src::bloc.dart::Bloc<Event, State>" <|-- "bitsync::blocs::fstest_bloc.dart::FSTestBloc"
+
+class "bitsync::blocs::user::user_bloc.dart::UserBloc" {
+  -DocumentReference _documentReference
+  -StreamSubscription _streamSubscription
+  +UserState initialState
+  +Stream mapEventToState()
+  -void _stopListening()
+  -void _startListening()
+  -void _onData()
+  +Future close()
+}
+
+"bitsync::blocs::user::user_bloc.dart::UserBloc" o-- "cloud_firestore::cloud_firestore.dart::DocumentReference"
+"bitsync::blocs::user::user_bloc.dart::UserBloc" o-- "dart::async::StreamSubscription"
+"bitsync::blocs::user::user_bloc.dart::UserBloc" o-- "bitsync::blocs::user::user_state.dart::UserState"
+"bloc::src::bloc.dart::Bloc<Event, State>" <|-- "bitsync::blocs::user::user_bloc.dart::UserBloc"
+
+abstract class "bitsync::blocs::user::user_event.dart::UserEvent" {
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "bitsync::blocs::user::user_event.dart::UserEvent"
+
+class "bitsync::blocs::user::user_event.dart::UserEventRequestData" {
+  +String uid
+  +List<Object> props
+}
+
+"bitsync::blocs::user::user_event.dart::UserEvent" <|-- "bitsync::blocs::user::user_event.dart::UserEventRequestData"
+
+class "bitsync::blocs::user::user_event.dart::UserEventReceivedData" {
+  +User user
+  +List<Object> props
+}
+
+"bitsync::blocs::user::user_event.dart::UserEventReceivedData" o-- "bitsync::data::user.dart::User"
+"bitsync::blocs::user::user_event.dart::UserEvent" <|-- "bitsync::blocs::user::user_event.dart::UserEventReceivedData"
+
+class "bitsync::blocs::user::user_event.dart::UserEventError" {
+  +String uid
+  +Exception error
+  +List<Object> props
+}
+
+"bitsync::blocs::user::user_event.dart::UserEvent" <|-- "bitsync::blocs::user::user_event.dart::UserEventError"
+
+abstract class "bitsync::blocs::user::user_state.dart::UserState" {
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "bitsync::blocs::user::user_state.dart::UserState"
+
+class "bitsync::blocs::user::user_state.dart::UserStateInitial" {
+  +List<Object> props
+}
+
+"bitsync::blocs::user::user_state.dart::UserState" <|-- "bitsync::blocs::user::user_state.dart::UserStateInitial"
+
+class "bitsync::blocs::user::user_state.dart::UserStateLoading" {
+  +List<Object> props
+}
+
+"bitsync::blocs::user::user_state.dart::UserState" <|-- "bitsync::blocs::user::user_state.dart::UserStateLoading"
+
+class "bitsync::blocs::user::user_state.dart::UserStateLoaded" {
+  +User user
+  +List<Object> props
+}
+
+"bitsync::blocs::user::user_state.dart::UserStateLoaded" o-- "bitsync::data::user.dart::User"
+"bitsync::blocs::user::user_state.dart::UserState" <|-- "bitsync::blocs::user::user_state.dart::UserStateLoaded"
+
+class "bitsync::blocs::user::user_state.dart::UserStateError" {
+  +String uid
+  +Exception error
+  +List<Object> props
+}
+
+"bitsync::blocs::user::user_state.dart::UserState" <|-- "bitsync::blocs::user::user_state.dart::UserStateError"
+
+class "bitsync::data::preference.dart::Preference" {
+}
+
+class "bitsync::data::user.dart::User" {
+  +String uid
+  +String nickname
+  +String photoUrl
+  +List<Object> props
+  +Map toMap()
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "bitsync::data::user.dart::User"
+
+class "bitsync::drawers::maindrawer.dart::MainDrawer" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "bitsync::drawers::maindrawer.dart::MainDrawer"
+
+class "bitsync::errors::notfoundexception.dart::NotFoundException" {
+  +String message
+}
+
+"dart::core::Exception" <|-- "bitsync::errors::notfoundexception.dart::NotFoundException"
+
+class "bitsync::firebasetest.dart::FirebaseTestApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "bitsync::firebasetest.dart::FirebaseTestApp"
+
+class "bitsync::firebasetest.dart::_MyHomePage" {
+  -FSTestBloc _testBloc
+  -void _setCounter()
+  +Widget build()
+}
+
+"bitsync::firebasetest.dart::_MyHomePage" o-- "bitsync::blocs::fstest_bloc.dart::FSTestBloc"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "bitsync::firebasetest.dart::_MyHomePage"
+
+class "bitsync::myapp.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "bitsync::myapp.dart::MyApp"
+
+class "bitsync::pages::loadingpage.dart::LoadingPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "bitsync::pages::loadingpage.dart::LoadingPage"
+
+class "bitsync::pages::loginpage.dart::LoginPage" {
+  +String errorMessage
+  +State createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "bitsync::pages::loginpage.dart::LoginPage"
+
+class "bitsync::pages::loginpage.dart::_LoginPageState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "bitsync::pages::loginpage.dart::_LoginPageState"
+
+class "bitsync::pages::loginpage.dart::_GoogleSignInButton" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "bitsync::pages::loginpage.dart::_GoogleSignInButton"
+
+class "bitsync::pages::mainpage.dart::MainPage" {
+  +Widget build()
+  -Widget _menuItem()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "bitsync::pages::mainpage.dart::MainPage"
+
+class "bitsync::pages::myprofilepage.dart::_ImageSource" {
+  +int index
+  {static} +List<_ImageSource> values
+  {static} +_ImageSource camera
+  {static} +_ImageSource gallery
+  {static} +_ImageSource cancel
+}
+
+"bitsync::pages::myprofilepage.dart::_ImageSource" o-- "bitsync::pages::myprofilepage.dart::_ImageSource"
+
+class "bitsync::pages::myprofilepage.dart::MyProfilePage" {
+  +Widget build()
+  -void _signOut()
+  -Widget _viewPage()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "bitsync::pages::myprofilepage.dart::MyProfilePage"
+
+class "bitsync::pages::myprofilepage.dart::_MyProfileEditPage" {
+  +User user
+  +State createState()
+}
+
+"bitsync::pages::myprofilepage.dart::_MyProfileEditPage" o-- "bitsync::data::user.dart::User"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "bitsync::pages::myprofilepage.dart::_MyProfileEditPage"
+
+class "bitsync::pages::myprofilepage.dart::_MyProfileEditPageState" {
+  -GlobalKey<FormState> _formKey
+  -String _nickname
+  -File _avataFile
+  +void initState()
+  +Widget build()
+  -void _onSave()
+}
+
+"bitsync::pages::myprofilepage.dart::_MyProfileEditPageState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"bitsync::pages::myprofilepage.dart::_MyProfileEditPageState" o-- "dart::io::File"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "bitsync::pages::myprofilepage.dart::_MyProfileEditPageState"
+
+class "bitsync::pages::myprofilepage.dart::_AvataField" {
+}
+
+"flutter::src::widgets::form.dart::FormField<T>" <|-- "bitsync::pages::myprofilepage.dart::_AvataField"
+
+class "bitsync::pages::preferencepage.dart::PreferencePage" {
+  +State createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "bitsync::pages::preferencepage.dart::PreferencePage"
+
+class "bitsync::pages::preferencepage.dart::_PreferencePageState" {
+  -bool _onLoading
+  -String _version
+  -String _buildNumber
+  -String _appName
+  +void initState()
+  +Widget build()
+  -void _refresh()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "bitsync::pages::preferencepage.dart::_PreferencePageState"
+
+class "bitsync::pages::rootpage.dart::RootPage" {
+  -AuthBloc _authBloc
+  +Widget build()
+}
+
+"bitsync::pages::rootpage.dart::RootPage" o-- "bitsync::blocs::auth::auth_bloc.dart::AuthBloc"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "bitsync::pages::rootpage.dart::RootPage"
+
+abstract class "bitsync::services::usershortcut.dart::UserReference" {
+  {static} +DocumentReference of()
+}
+
+class "bitsync::widgets::iconbutton.dart::IconButtonWithCaption" {
+}
+
+"flutter::src::material::flat_button.dart::FlatButton" <|-- "bitsync::widgets::iconbutton.dart::IconButtonWithCaption"
+
+class "bitsync::widgets::myavata.dart::MyAvata" {
+}
+
+"flutter::src::material::circle_avatar.dart::CircleAvatar" <|-- "bitsync::widgets::myavata.dart::MyAvata"
+
+class "bitsync::widgets::myscaffold.dart::MyScaffold" {
+}
+
+"flutter::src::material::scaffold.dart::Scaffold" <|-- "bitsync::widgets::myscaffold.dart::MyScaffold"
+
+
+@enduml

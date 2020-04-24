@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "804512264074",
+    "firebase_url": "https://lightbitsync.firebaseio.com",
+    "project_id": "lightbitsync",
+    "storage_bucket": "lightbitsync.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804512264074:android:1842a9ae0567446105a273",
+        "android_client_info": {
+          "package_name": "com.quintet.BitSync"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804512264074-54im7u5v5ha890lrj9tn0b72n8tfgm4k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBL7bSQjWxKFbQ4AE0R4vusPGDId1UpiJA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804512264074-54im7u5v5ha890lrj9tn0b72n8tfgm4k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
