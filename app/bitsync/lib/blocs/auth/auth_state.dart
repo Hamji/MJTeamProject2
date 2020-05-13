@@ -8,12 +8,13 @@ abstract class AuthState extends Equatable {
   const AuthState();
 
   bool isSameAuthState(final AuthState other) => this == other;
+
+  @override
+  List<Object> get props => const [];
 }
 
 class AuthStateInitial extends AuthState {
   const AuthStateInitial();
-  @override
-  List<Object> get props => const [];
 }
 
 abstract class AuthStateUID extends AuthState {
@@ -27,21 +28,20 @@ abstract class AuthStateUID extends AuthState {
 
 class AuthStateLoading extends AuthState {
   const AuthStateLoading();
-  @override
-  List<Object> get props => const [];
 }
 
 class AuthStateSignedOut extends AuthState {
   const AuthStateSignedOut();
-  @override
-  List<Object> get props => const [];
 }
 
 class AuthStateSignedIn extends AuthStateUID {
   final User user;
+
   AuthStateSignedIn({@required this.user});
+
   @override
   List<Object> get props => [user];
+
   @override
   String get uid => user.uid;
 }
@@ -61,7 +61,9 @@ class AuthStateUpdating extends AuthStateUID {
 class AuthStateError extends AuthState {
   final Exception error;
   final String authType;
+  
   AuthStateError({@required this.error, @required this.authType});
+
   @override
   List<Object> get props => [error];
 }

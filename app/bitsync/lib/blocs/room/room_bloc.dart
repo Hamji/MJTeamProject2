@@ -1,0 +1,59 @@
+import 'dart:async';
+
+import 'package:bitsync/data/data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import './room_event.dart';
+import './room_state.dart';
+
+class RoomBloc extends Bloc<RoomEvent, RoomState> {
+  StreamSubscription _subscription;
+  DocumentReference _reference;
+
+  @override
+  RoomState get initialState => const RoomStateInitial();
+
+  @override
+  Stream<RoomState> mapEventToState(final RoomEvent event) async* {
+    if (event is RoomEventInit) {
+      _stopListening();
+      yield RoomStateLoading(roomId: event.roomId);
+      _startListening(event.roomId);
+    } else if (event is RoomEventNotFound)
+      yield RoomStateNotFound(roomId: event.roomId);
+    else if (event is RoomEventReceived)
+      yield RoomStateUpdate(data: event.data);
+  }
+
+  @override
+  Future<void> close() {
+    _stopListening();
+    return super.close();
+  }
+
+  void _startListening(final String id) {
+    _reference = Firestore.instance.collection("rooms").document(id);
+    _subscription = _reference.snapshots().listen(
+          (event) => add(
+            event.exists
+                ? RoomEventReceived(
+                    data: RoomData.fromMap(
+                      roomId: event.documentID,
+                      map: event.data,
+                    ),
+                  )
+                : RoomEventNotFound(
+                    roomId: event.documentID,
+                  ),
+          ),
+        );
+  }
+
+  void _stopListening() {
+    if (null != _subscription) {
+      _subscription.cancel();
+      _subscription = null;
+    }
+  }
+}
