@@ -2,14 +2,9 @@ import 'package:bitsync/routes/routes.dart';
 import 'package:flutter/material.dart';
 
 final _routes = {
-  "/my-profile": (final RouteSettings settings) => MyProfileRoute(
-        authBloc: settings.arguments,
-        settings: settings,
-      ),
-  "/preference": (final RouteSettings settings) => PreferenceRoute(
-        authBloc: settings.arguments,
-        settings: settings,
-      ),
+  "/my-profile": (settings) => MyProfileRoute(settings),
+  "/preference": (settings) => PreferenceRoute(settings),
+  "/rooms": (settings) => RoomRoute(settings),
   "/": (_) => RootRoute(),
 };
 

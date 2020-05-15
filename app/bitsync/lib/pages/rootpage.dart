@@ -16,7 +16,7 @@ class RootPage extends StatelessWidget {
             print(state.error);
             return LoginPage(errorMessage: "Error to Login, Please try again.");
           } else if (state is AuthStateSignedIn)
-            return MainPage();
+            return PageRouter();
           else if (state is AuthStateInitial)
             context.bloc<AuthBloc>().add(const AuthEventInitialize());
 

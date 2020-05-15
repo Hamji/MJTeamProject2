@@ -42,7 +42,7 @@ class MainDrawer extends StatelessWidget {
               onTap: () => Navigator.pushNamed(
                 context,
                 "/my-profile",
-                arguments: BlocProvider.of<AuthBloc>(context),
+                arguments: context,
               ),
             ),
             ListTile(
@@ -51,7 +51,7 @@ class MainDrawer extends StatelessWidget {
               onTap: () => Navigator.pushNamed(
                 context,
                 "/preference",
-                arguments: BlocProvider.of<AuthBloc>(context),
+                arguments: context,
               ),
             ),
           ],

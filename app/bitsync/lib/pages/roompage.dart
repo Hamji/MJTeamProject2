@@ -1,4 +1,5 @@
 import 'package:bitsync/blocs/blocs.dart';
+import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
@@ -9,17 +10,17 @@ class RoomPage extends StatelessWidget {
   RoomPage({@required this.roomId});
 
   @override
-  Widget build(final BuildContext context) => BlocProvider(
-        create: (final context) => RoomBloc(),
-        child: _RoomPageNested(roomId: roomId),
+  Widget build(final BuildContext context) => BlocBuilder(
+        bloc: context.bloc<RoomBloc>(),
+        builder: (context, state) {
+          return MyScaffold(
+            appBar: AppBar(
+              title: Text(roomId),
+            ),
+            body: Center(
+              child: Text(roomId),
+            ),
+          );
+        },
       );
-}
-
-class _RoomPageNested extends StatelessWidget {
-  final String roomId;
-
-  _RoomPageNested({@required this.roomId});
-
-  @override
-  Widget build(final BuildContext context) {}
 }

@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:meta/meta.dart';
 
-const DYNAMIC_LINK_URL_PREFIX = "https://beatsync.page.link";
+const DYNAMIC_LINK_URL_PREFIX = "https://bitsync.page.link";
 const ANDROID_PACKAGE_NAME = "com.quintet.BitSync";
 const IOS_BUNDLE_ID = "com.quintet.BitSync";
 const IPAD_BUNDLE_ID = "com.quintet.BitSync";
@@ -32,6 +34,25 @@ class DynamicLinkService {
 
   static Future<Uri> createRoomLink({@required String roomId}) async =>
       await createLink(page: "/rooms/" + roomId);
+
+  static Stream<PendingDynamicLinkData> get stream => _streamController.stream;
+
+  static void initialize() => _initialize();
 }
+
+final _streamController = StreamController<PendingDynamicLinkData>.broadcast();
+
+void _initialize() {
+  FirebaseDynamicLinks.instance.onLink(
+    onSuccess: (data) async {
+      _streamController.add(data);
+    },
+    onError: (e) async {
+      print("================== DynamicLinkError ====================");
+      print(e.message);
+    },
+  );
+}
+
 // test link page
 // https://beatsync.page.link?amv=1&apn=com.quintet.BitSync&ibi=com.quintet.BitSync&imv=1.0.0&isi=&ipbi=com.quintet.BitSync&link=https%3A%2F%2Fbeatsync.page.link%2Frooms%2F142274323
