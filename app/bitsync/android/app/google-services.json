@@ -15,6 +15,38 @@
       },
       "oauth_client": [
         {
+          "client_id": "804512264074-vgqvg2dt30rca4jl4vbosj508ume7uu2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quintet.BitSync",
+            "certificate_hash": "372e6afa101e7f092a2ab1e4f8b592dc6d7cdcf4"
+          }
+        },
+        {
+          "client_id": "804512264074-cjocrk2spkehj9pd4gp0tu9tfnh8052k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quintet.BitSync",
+            "certificate_hash": "6e47bf1c110cf62e70aca2a45eaa67088dafc28f"
+          }
+        },
+        {
+          "client_id": "804512264074-3f23jv69tk2662nbflkfd2cmfvrje15k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quintet.BitSync",
+            "certificate_hash": "7c9655bb6833eba284a80bc5b2c71463ae39ec37"
+          }
+        },
+        {
+          "client_id": "804512264074-brknhhk79oea4hrs0g9pv1mkbh7ds2ua.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quintet.BitSync",
+            "certificate_hash": "97a25d0e9eb07d1ad8d67651f9780b55e2fbfa6b"
+          }
+        },
+        {
           "client_id": "804512264074-54im7u5v5ha890lrj9tn0b72n8tfgm4k.apps.googleusercontent.com",
           "client_type": 3
         }

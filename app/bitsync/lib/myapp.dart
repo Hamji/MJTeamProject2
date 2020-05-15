@@ -1,5 +1,17 @@
-import 'package:bitsync/pages/pages.dart';
+import 'package:bitsync/routes/routes.dart';
 import 'package:flutter/material.dart';
+
+final _routes = {
+  "/my-profile": (final RouteSettings settings) => MyProfileRoute(
+        authBloc: settings.arguments,
+        settings: settings,
+      ),
+  "/preference": (final RouteSettings settings) => PreferenceRoute(
+        authBloc: settings.arguments,
+        settings: settings,
+      ),
+  "/": (_) => RootRoute(),
+};
 
 class MyApp extends StatelessWidget {
   @override
@@ -23,8 +35,11 @@ class MyApp extends StatelessWidget {
         ),
         // home: RootPage(),
         initialRoute: "/",
-        routes: {
-          "/": (context) => RootPage(),
-        },
+        // routes: {
+        //   "/": (context) => RootPage(),
+        //   "/my-profile": (context) => MyProfilePage(),
+        // },
+        onGenerateRoute: (settings) =>
+            (_routes[settings.name] ?? _routes["/"])(settings),
       );
 }

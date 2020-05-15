@@ -39,29 +39,19 @@ class MainDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.account_circle),
               title: const Text("My Profile"),
-              onTap: () => Navigator.push(
+              onTap: () => Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => BlocProvider.value(
-                    value: BlocProvider.of<AuthBloc>(context),
-                    child: MyProfilePage(),
-                  ),
-                  settings: const RouteSettings(name: "/my-profile"),
-                ),
+                "/my-profile",
+                arguments: BlocProvider.of<AuthBloc>(context),
               ),
             ),
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text("Preference"),
-              onTap: () => Navigator.push(
+              onTap: () => Navigator.pushNamed(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => BlocProvider.value(
-                    value: BlocProvider.of<AuthBloc>(context),
-                    child: PreferencePage(),
-                  ),
-                  settings: const RouteSettings(name: "/preference"),
-                ),
+                "/preference",
+                arguments: BlocProvider.of<AuthBloc>(context),
               ),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:bitsync/drawers/drawers.dart';
+import 'package:bitsync/services/services.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,11 @@ class MainPage extends StatelessWidget {
               caption: "Create New",
             ),
             _menuItem(
-              onPressed: null,
+              onPressed: () async {
+                final uri = await DynamicLinkService.createRoomLink(
+                    roomId: "142274323");
+                print(uri.toString());
+              },
               icon: Icons.airplay,
               caption: "Enter Room",
             ),

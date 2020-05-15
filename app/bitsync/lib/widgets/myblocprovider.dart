@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-typedef Create<T extends Bloc<dynamic, dynamic>> = T Function(
+typedef Create<BlocType extends Bloc<dynamic, dynamic>> = BlocType Function(
     BuildContext context);
 typedef WidgetBuilderWithBloc<T extends Bloc<dynamic, dynamic>> = Widget
     Function(BuildContext, T);
 
-class MyBlocProvider<T extends Bloc<dynamic, S>, S> extends StatelessWidget {
-  final Create<T> create;
+class MyBlocProvider<BlocType extends Bloc<dynamic, StateType>, StateType>
+    extends StatelessWidget {
+  final Create<BlocType> create;
   final WidgetBuilder builder;
   final bool lazy;
 
@@ -21,24 +22,23 @@ class MyBlocProvider<T extends Bloc<dynamic, S>, S> extends StatelessWidget {
         lazy: lazy,
       );
 
-  factory MyBlocProvider.withBuilder({
+  MyBlocProvider.withBuilder({
     Key key,
-    @required Create<T> create,
-    @required BlocWidgetBuilder<S> builder,
+    @required Create<BlocType> create,
+    @required BlocWidgetBuilder<StateType> builder,
     BlocBuilderCondition condition,
     bool lazy,
-  }) =>
-      MyBlocProvider(
-        key: key,
-        create: create,
-        builder: (context) => BlocBuilder(
+  }) : this(
           key: key,
-          bloc: context.bloc<T>(),
-          condition: condition,
-          builder: builder,
-        ),
-        lazy: lazy,
-      );
+          create: create,
+          builder: (context) => BlocBuilder(
+            key: key,
+            bloc: context.bloc<BlocType>(),
+            condition: condition,
+            builder: builder,
+          ),
+          lazy: lazy,
+        );
 }
 
 // class MyBlocProvider<T extends Bloc<dynamic, S>, S> extends BlocProvider<T> {

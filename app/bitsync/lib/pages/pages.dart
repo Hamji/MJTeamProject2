@@ -1,6 +1,7 @@
-export './myprofilepage.dart';
 export './loadingpage.dart';
 export './loginpage.dart';
 export './mainpage.dart';
-export './rootpage.dart';
+export './myprofilepage.dart';
 export './preferencepage.dart';
+export './roompage.dart';
+export './rootpage.dart';
