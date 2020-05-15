@@ -1,4 +1,6 @@
 import 'package:bitsync/drawers/drawers.dart';
+import 'package:bitsync/pages/createnewpage.dart';
+import 'package:bitsync/pages/favoritspage.dart';
 import 'package:bitsync/services/services.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +23,12 @@ class MainPage extends StatelessWidget {
               caption: "Manage Beats",
             ),
             _menuItem(
-              onPressed: null,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CreateRoomPage()),
+                );
+              },
               icon: Icons.create_new_folder,
               caption: "Create New",
             ),
@@ -35,7 +42,12 @@ class MainPage extends StatelessWidget {
               caption: "Enter Room",
             ),
             _menuItem(
-              onPressed: null,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FavoritsPage()),
+                );
+              },
               icon: Icons.star,
               caption: "Favorits",
             ),
