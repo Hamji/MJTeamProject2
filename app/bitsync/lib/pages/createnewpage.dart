@@ -34,7 +34,7 @@ class _CreateRoomState extends State<CreateRoomPage> {
       body: _body()
     );
   }
-
+// body 부분
   _body(){
       return Container(
         padding: const EdgeInsets.fromLTRB(.0, 30.0, 0, 30.0),
@@ -141,6 +141,7 @@ class _CreateRoomState extends State<CreateRoomPage> {
             FloatingActionButton.extended(
               onPressed: () {
                 Navigator.pop(context);
+
               },
               icon: Icon(Icons.save),
               label: Text('Determine'),
