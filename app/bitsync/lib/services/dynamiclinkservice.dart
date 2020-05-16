@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bitsync/services/shorturlservice.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:meta/meta.dart';
 
@@ -27,7 +28,9 @@ class DynamicLinkService {
         minimumVersion: "1.0.0",
       ),
     );
-    return await parameters.buildUrl();
+    final url = await parameters.buildUrl();
+    return Uri.parse(await ShortUrlService.makeShortUrl(url.toString()));
+
     // final shortLink = await parameters.buildShortLink();
     // return shortLink.shortUrl;
   }

@@ -6,8 +6,15 @@ import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatelessWidget {
+  void test() async {
+    var result = await ShortUrlService.makeShortUrl(
+        "https://bitsync.page.link?amv=1&apn=com.quintet.BitSync&ibi=com.quintet.BitSync&imv=1.0.0&isi=&ipbi=com.quintet.BitSync&link=https%3A%2F%2Fbitsync.page.link%2Frooms%2F142274323");
+    print(result);
+  }
+
   @override
   Widget build(final BuildContext context) {
+    test();
     return MyScaffold(
       appBar: AppBar(title: const Text("BitSync")),
       drawer: MainDrawer(),

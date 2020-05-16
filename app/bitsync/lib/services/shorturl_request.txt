@@ -1,0 +1,19 @@
+Host: www.shorturl.at
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 222
+Origin: https://www.shorturl.at
+Connection: keep-alive
+Referer: https://www.shorturl.at/
+Cookie: __cfduid=d59393b60ba9b095bb16ace964b587cf81589596367; __cf_bm=1b6200b2dd2adaa6839f1219439f523fb077c1e5-1589596402-1800-AW8NhB5QaWsU9+IIjqiA7rifRErJx9JwnE0e/BkXFa0BJgqOonlv9DvXrx4hi6k2tb5aYyiBnQieJY/ASAPRKYZ9A/QjzXam+8St7RhYdk0/
+Upgrade-Insecure-Requests: 1
+TE: Trailers
+
+
+
+PAYLOAD
+
+u=https%3A%2F%2Fbitsync.page.link%3Famv%3D1%26apn%3Dcom.quintet.BitSync%26ibi%3Dcom.quintet.BitSync%26imv%3D1.0.0%26isi%3D%26ipbi%3Dcom.quintet.BitSync%26link%3Dhttps%253A%252F%252Fbitsync.page.link%252Frooms%252F142274323
