@@ -1,20 +1,12 @@
 import 'package:bitsync/drawers/drawers.dart';
 import 'package:bitsync/pages/createnewpage.dart';
-import 'package:bitsync/pages/favoritspage.dart';
-import 'package:bitsync/services/services.dart';
+import 'package:bitsync/routes/routes.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatelessWidget {
-  void test() async {
-    var result = await ShortUrlService.makeShortUrl(
-        "https://bitsync.page.link?amv=1&apn=com.quintet.BitSync&ibi=com.quintet.BitSync&imv=1.0.0&isi=&ipbi=com.quintet.BitSync&link=https%3A%2F%2Fbitsync.page.link%2Frooms%2F142274323");
-    print(result);
-  }
-
   @override
   Widget build(final BuildContext context) {
-    test();
     return MyScaffold(
       appBar: AppBar(title: const Text("BitSync")),
       drawer: MainDrawer(),
@@ -40,21 +32,16 @@ class MainPage extends StatelessWidget {
               caption: "Create New",
             ),
             _menuItem(
-              onPressed: () async {
-                final uri = await DynamicLinkService.createRoomLink(
-                    roomId: "142274323");
-                print(uri.toString());
-              },
+              onPressed: () => Routing.toRoom(
+                context,
+                roomId: "142274323",
+                createIfNotExist: true,
+              ),
               icon: Icons.airplay,
               caption: "Enter Room",
             ),
             _menuItem(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FavoritsPage()),
-                );
-              },
+              onPressed: () => Routing.toFavorites(context),
               icon: Icons.star,
               caption: "Favorits",
             ),

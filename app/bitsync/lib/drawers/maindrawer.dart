@@ -1,5 +1,5 @@
 import 'package:bitsync/blocs/blocs.dart';
-import 'package:bitsync/pages/pages.dart';
+import 'package:bitsync/routes/routes.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,20 +39,12 @@ class MainDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.account_circle),
               title: const Text("My Profile"),
-              onTap: () => Navigator.pushNamed(
-                context,
-                "/my-profile",
-                arguments: context,
-              ),
+              onTap: () => Routing.toMyProfile(context),
             ),
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text("Preference"),
-              onTap: () => Navigator.pushNamed(
-                context,
-                "/preference",
-                arguments: context,
-              ),
+              onTap: () => Routing.toPreference(context),
             ),
           ],
           padding: EdgeInsets.zero,

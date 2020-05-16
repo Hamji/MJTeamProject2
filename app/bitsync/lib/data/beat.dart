@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 enum PatternType { mute, small, medium, large, subPattern }
 
 class PatternElement {
@@ -29,7 +27,8 @@ class Pattern {
 
   Pattern.fromMap(final Map<dynamic, dynamic> map) {
     size = map["size"];
-    elements = (map["elements"] as List<Map<dynamic, dynamic>>)
+    elements = (map["elements"] as List)
+        .map((e) => e as Map<dynamic, dynamic>)
         .map((e) => PatternElement.fromMap(e))
         .toList();
   }

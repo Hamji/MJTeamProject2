@@ -16,7 +16,10 @@ class RoomRoute extends MaterialPageRoute {
                 BlocProvider(create: (_) => RoomBloc()),
               ],
               child: Builder(
-                builder: (context) => RoomPage(roomId: parameter.roomId),
+                builder: (context) => RoomPage(
+                  roomId: parameter.roomId,
+                  createIfNotExit: parameter.createIfNotExist,
+                ),
               ),
             );
           },

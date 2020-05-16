@@ -11,6 +11,8 @@ const IPAD_BUNDLE_ID = "com.quintet.BitSync";
 const IOS_APPSTORE_ID = "";
 
 class DynamicLinkService {
+  DynamicLinkService._();
+
   static Future<Uri> createLink({
     @required String page,
   }) async {

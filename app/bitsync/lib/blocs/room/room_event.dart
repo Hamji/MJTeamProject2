@@ -14,6 +14,15 @@ class RoomEventInit extends RoomEvent {
   List<Object> get props => [roomId];
 }
 
+class RoomEventCreate extends RoomEvent {
+  final RoomData data;
+
+  RoomEventCreate({@required this.data});
+
+  @override
+  List<Object> get props => [data];
+}
+
 class RoomEventReceived extends RoomEvent {
   final RoomData data;
 

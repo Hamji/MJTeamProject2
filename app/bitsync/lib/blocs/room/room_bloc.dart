@@ -24,6 +24,11 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       yield RoomStateNotFound(roomId: event.roomId);
     else if (event is RoomEventReceived)
       yield RoomStateUpdate(data: event.data);
+    else if (event is RoomEventCreate) {
+      _stopListening();
+      yield RoomStateLoading(roomId: event.data.roomId);
+      _createNewRoom(event.data);
+    }
   }
 
   @override
@@ -55,5 +60,14 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       _subscription.cancel();
       _subscription = null;
     }
+  }
+
+  void _createNewRoom(RoomData data) async {
+    assert(data.roomId?.isNotEmpty ?? false);
+    await Firestore.instance
+        .collection("rooms")
+        .document(data.roomId)
+        .setData(data.toMap());
+    _startListening(data.roomId);
   }
 }

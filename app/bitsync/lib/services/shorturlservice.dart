@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:html/parser.dart' as parser;
 import 'package:http/http.dart' as http;
 
 const _userAgent =
@@ -18,6 +17,8 @@ final _host2 = Uri.parse("https://cutt.ly/scripts/shortenUrl.php");
 final cookiePattern = RegExp(r"([A-Za-z0-9_]+)=([A-Za-z0-9-/+=]+)");
 
 class ShortUrlService {
+  ShortUrlService._();
+
   static http.Client _client = http.Client();
   static Map<String, String> _cookies = {};
 
@@ -89,13 +90,7 @@ class ShortUrlService {
           // .transform(gzip.decoder)
           .transform(utf8.decoder)
           .listen(sb.write)
-            ..onDone(() {
-              print("============= DECODING COMPLETE:");
-              final body = sb.toString();
-
-              print(body);
-              completer.complete(body);
-            })
+            ..onDone(() => completer.complete(sb.toString()))
             ..onError(completer.completeError);
 
       return completer.future;
