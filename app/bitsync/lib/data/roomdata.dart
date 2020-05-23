@@ -4,6 +4,9 @@ import 'package:bitsync/data/beat.dart';
 class RoomData {
   final String roomId;
 
+  /// name of room
+  String name;
+
   /// Microseconds since epoch
   int startAt;
 
@@ -23,6 +26,7 @@ class RoomData {
 
   /// Convert to Map<String, dynamic>, use for firestore
   Map<String, dynamic> toMap() => {
+        "name": name,
         "startAt": startAt,
         "sequence": sequence.map((e) => e.toMap()).toList(),
         "current": currentIndex,
@@ -39,5 +43,6 @@ class RoomData {
         .map((e) => Sequence.fromMap(e))
         .toList();
     currentIndex = map["current"];
+    name = map["name"];
   }
 }
