@@ -69,3 +69,16 @@ class RoomData {
     duration = map.getDouble("duration", defaultValue: 2.0);
   }
 }
+
+extension RoomDataExtension on RoomData {
+  int getCurrentBeat(int timestamp, {bool useRound = false}) {
+    // find current beat
+    var inseq = (timestamp - this.startAt) * 1.0e-6 / this.duration;
+    inseq -= inseq.floorToDouble();
+    inseq *= this.current.size;
+    int currentBeat = useRound ? inseq.round() : inseq.floor();
+    return currentBeat;
+  }
+
+  int get currentBeat => this.getCurrentBeat(getTimestamp());
+}

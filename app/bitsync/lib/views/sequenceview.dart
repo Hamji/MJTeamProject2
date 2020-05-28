@@ -45,17 +45,25 @@ class _SequenceViewState extends State<SequenceView>
   }
 
   @override
-  Widget build(final BuildContext context) => LayoutBuilder(
-        builder: (context, constraints) => Container(
-          child: CustomPaint(
-            painter: _BeatPainter(
-              roomData: roomData,
-              tick: tick,
+  Widget build(final BuildContext context) => Stack(
+        children: [
+          LayoutBuilder(
+            builder: (context, constraints) => Container(
+              child: CustomPaint(
+                painter: _BeatPainter(
+                  roomData: roomData,
+                  tick: tick,
+                ),
+              ),
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
             ),
           ),
-          width: constraints.maxWidth,
-          height: constraints.maxHeight,
-        ),
+          Text(
+            "${roomData.currentBeat + 1} / ${roomData.current.size}",
+            style: const TextStyle(color: Colors.white),
+          )
+        ],
       );
 
   @override
@@ -89,7 +97,7 @@ class _BeatPainter extends CustomPainter {
   @override
   void paint(final Canvas canvas, final Size size) {
     canvas.save();
-    var _latestUpdatedAt = timestamp;
+    var _latestUpdatedAt = getTimestamp();
     // elapsedAtStart: seconds
     var elapsedAtStart = (_latestUpdatedAt - roomData.startAt) * 1.0e-6;
     var cnt = elapsedAtStart / roomData.duration;
@@ -181,6 +189,4 @@ class _BeatPainter extends CustomPainter {
   @override
   bool shouldRepaint(final _BeatPainter oldDelegate) =>
       oldDelegate.tick != this.tick;
-
-  int get timestamp => DateTime.now().microsecondsSinceEpoch;
 }

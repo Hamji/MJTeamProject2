@@ -18,7 +18,7 @@ class BpmTapper extends StatelessWidget {
         if (state is RoomStateUpdate) {
           _recorder.update(state.data);
           var timestamp = getTimestamp();
-          var sequenceDuration = _recorder.touch(timestamp);
+          var sequenceDuration = _recorder.touch(state.data, timestamp);
 
           if (sequenceDuration > 0.0)
             context.roomBloc.updateBpm(
@@ -57,7 +57,7 @@ class _BpmRecorder {
   }
 
   /// return: Sequence Length if not recognized then return -1
-  double touch(int timestamp) {
+  double touch(RoomData data, int timestamp) {
     if (_timeout > 0 && _timeout < timestamp) reset();
     if (_startAt == 0) _startAt = timestamp;
 
@@ -81,8 +81,10 @@ class _BpmRecorder {
 
     _initDuration = max(beatLength * 2, MIN_TIMEOUT);
 
-    var result = (beatLength * _size).toDouble() * 1.0e-6;
-    return result;
+    _startAt =
+        timestamp - data.getCurrentBeat(timestamp, useRound: true) * beatLength;
+
+    return (beatLength * _size).toDouble() * 1.0e-6;
   }
 
   void reset() {

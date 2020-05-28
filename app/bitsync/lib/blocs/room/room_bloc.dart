@@ -75,11 +75,14 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   /// duration mean current sequence duration
   void updateBpm(int timestamp, {double duration = 0.0}) async {
     assert(state is RoomStateUpdate);
+    var room = (state as RoomStateUpdate).data;
     Map<String, dynamic> data = {"startAt": timestamp};
-    if (duration > 0.0) data["duration"] = duration;
+    if (duration > 0.0) data["duration"] = room.duration = duration;
+    room.startAt = timestamp;
+
     await Firestore.instance
         .collection("rooms")
-        .document((state as RoomStateUpdate).data.roomId)
+        .document(room.roomId)
         .updateData(data);
   }
 }
