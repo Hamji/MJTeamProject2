@@ -70,6 +70,7 @@ class RoomPage extends StatelessWidget {
               ),
               body: RoomView(roomData: state.data),
               backgroundColor: Colors.black,
+              setDefaultPadding: false,
             );
           return LoadingPage();
         },

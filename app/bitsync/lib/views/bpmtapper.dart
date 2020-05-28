@@ -2,7 +2,13 @@ import 'dart:math';
 
 import 'package:bitsync/blocs/blocs.dart';
 import 'package:bitsync/data/data.dart';
+import 'package:bitsync/settings.dart';
 import 'package:flutter/material.dart';
+
+int _touchTimeOffset = INITIAL_OFFSET_OF_TOUCH_TIMESTAMP;
+
+void _loadPreferences() async =>
+    _touchTimeOffset = await LocalPreferences.offsetOfTouchTimestamp();
 
 class BpmTapper extends StatelessWidget {
   static final _BpmRecorder _recorder = _BpmRecorder();
@@ -12,12 +18,13 @@ class BpmTapper extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    _loadPreferences();
     return FlatButton(
       onPressed: () {
         final state = context.roomBloc.state;
         if (state is RoomStateUpdate) {
           _recorder.update(state.data);
-          var timestamp = getTimestamp();
+          var timestamp = getTimestamp() - _touchTimeOffset;
           var sequenceDuration = _recorder.touch(state.data, timestamp);
 
           if (sequenceDuration > 0.0)
@@ -51,7 +58,7 @@ class _BpmRecorder {
     if (_size != data.current.size) {
       _size = data.current.size;
       _maxSize = max(4, _size * 2);
-      _initDuration = max(data.duration * 1.0e+6 ~/ _size * 2, MIN_TIMEOUT);
+      _initDuration = max(data.durationMicroseconds ~/ _size * 2, MIN_TIMEOUT);
       reset();
     }
   }
@@ -81,8 +88,8 @@ class _BpmRecorder {
 
     _initDuration = max(beatLength * 2, MIN_TIMEOUT);
 
-    _startAt =
-        timestamp - data.getCurrentBeat(timestamp, useRound: true) * beatLength;
+    _startAt = timestamp -
+        data.getCurrentBeatIndex(timestamp, useRound: true) * beatLength;
 
     return (beatLength * _size).toDouble() * 1.0e-6;
   }

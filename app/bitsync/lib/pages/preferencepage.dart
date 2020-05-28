@@ -1,3 +1,6 @@
+import 'package:bitsync/data/data.dart';
+import 'package:bitsync/pages/pages.dart';
+import 'package:bitsync/settings.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +17,8 @@ class _PreferencePageState extends State<PreferencePage> {
   String _buildNumber;
   String _appName;
 
+  int _touchTimeOffset = INITIAL_OFFSET_OF_TOUCH_TIMESTAMP;
+
   @override
   void initState() {
     _onLoading = false;
@@ -24,11 +29,17 @@ class _PreferencePageState extends State<PreferencePage> {
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
+    LocalPreferences.offsetOfTouchTimestamp().then((value) {
+      if (_touchTimeOffset != value) setState(() => _touchTimeOffset = value);
+    });
 
-    final invListTile = (final String subtitle, final String title) => ListTile(
+    final invListTile = (final String subtitle, final Widget child) => ListTile(
           title: Text(subtitle, style: theme.textTheme.caption),
-          subtitle: Text(title, style: theme.textTheme.headline5),
+          subtitle: child,
         );
+
+    final invListTileWithTitle = (final String subtitle, final String title) =>
+        invListTile(subtitle, Text(title, style: theme.textTheme.headline5));
 
     _refresh(context);
 
@@ -38,9 +49,23 @@ class _PreferencePageState extends State<PreferencePage> {
       ),
       body: ListView(
         children: [
-          invListTile("App name", _appName),
-          invListTile("Version", _version),
-          invListTile("Build number.", _buildNumber),
+          invListTile(
+            "Touch time offset (milliseconds)",
+            FlatButton.icon(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TouchAdjustPage(),
+                ),
+              ),
+              icon: const Icon(Icons.timer),
+              label: Text("${_touchTimeOffset ~/ 1000} ms"),
+            ),
+          ),
+          const Divider(),
+          invListTileWithTitle("App name", _appName),
+          invListTileWithTitle("Version", _version),
+          invListTileWithTitle("Build number.", _buildNumber),
         ],
       ),
     );

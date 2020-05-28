@@ -37,7 +37,8 @@ dependencies:
   http: ^0.12.1
   share: ^0.6.4+2
   progress_dialog: ^1.2.2
-
+  shared_preferences: ^0.5.7+3
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

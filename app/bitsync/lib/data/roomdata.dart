@@ -39,6 +39,8 @@ class RoomData {
 
   double duration;
 
+  int get durationMicroseconds => (duration * 1e+6).toInt();
+
   int get bpm {
     var beatLength = duration / current.size;
     return (60.0 / beatLength).round();
@@ -71,7 +73,7 @@ class RoomData {
 }
 
 extension RoomDataExtension on RoomData {
-  int getCurrentBeat(int timestamp, {bool useRound = false}) {
+  int getCurrentBeatIndex(int timestamp, {bool useRound = false}) {
     // find current beat
     var inseq = (timestamp - this.startAt) * 1.0e-6 / this.duration;
     inseq -= inseq.floorToDouble();
@@ -80,5 +82,43 @@ extension RoomDataExtension on RoomData {
     return currentBeat;
   }
 
-  int get currentBeat => this.getCurrentBeat(getTimestamp());
+  int get currentBeatIndex => this.getCurrentBeatIndex(getTimestamp());
+
+  // BeatInfo getCurrentBeat(int timestamp) {
+  //   int duration = (this.duration * 1e+6).toInt();
+  //   return _getCurrentBeat(
+  //     pass: (timestamp - this.startAt) % duration,
+  //     duration: duration,
+  //     pattern: this.current,
+  //   );
+  // }
+
+  // static BeatInfo _getCurrentBeat({
+  //   @required int pass,
+  //   @required int duration,
+  //   @required Pattern pattern,
+  // }) {
+  //   int beatLength = duration ~/ pattern.size;
+  //   int index = pass ~/ beatLength;
+  //   var beat = pattern.elements[index % pattern.size];
+  //   if (beat.type == PatternType.subPattern) {
+  //     return _getCurrentBeat(
+  //       pass: pass % beatLength,
+  //       duration: beatLength,
+  //       pattern: beat.subPattern,
+  //     );
+  //   } else
+  //     return BeatInfo(
+  //       type: beat.type,
+  //       elapsed: pass % beatLength * 1e-6,
+  //     );
+  // }
 }
+
+// @immutable
+// class BeatInfo {
+//   final PatternType type;
+//   final double elapsed;
+
+//   BeatInfo({@required this.type, @required this.elapsed});
+// }
