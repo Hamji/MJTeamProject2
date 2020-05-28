@@ -73,7 +73,7 @@ class _CreateRoomState extends State<CreateRoomPage> {
                       height: 9.0,
                     ),
                     Text(
-                      'Default Atority',
+                      'Default Authority',
                       style: TextStyle(fontSize: 30.0),
                     ),
 
