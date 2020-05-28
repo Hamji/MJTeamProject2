@@ -92,7 +92,7 @@ class _BeatPainter extends CustomPainter {
     var _latestUpdatedAt = timestamp;
     // elapsedAtStart: seconds
     var elapsedAtStart = (_latestUpdatedAt - roomData.startAt) * 1.0e-6;
-    var cnt = elapsedAtStart / roomData.current.duration;
+    var cnt = elapsedAtStart / roomData.duration;
     var cDelta = cnt - cnt.floorToDouble();
 
     canvas.translate(size.width * 0.5, cDelta * size.height);

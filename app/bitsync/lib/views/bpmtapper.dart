@@ -51,8 +51,7 @@ class _BpmRecorder {
     if (_size != data.current.size) {
       _size = data.current.size;
       _maxSize = max(4, _size * 2);
-      _initDuration =
-          max(data.current.duration * 1.0e+6 ~/ _size * 2, MIN_TIMEOUT);
+      _initDuration = max(data.duration * 1.0e+6 ~/ _size * 2, MIN_TIMEOUT);
       reset();
     }
   }

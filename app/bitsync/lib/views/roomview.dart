@@ -15,7 +15,7 @@ class RoomView extends StatelessWidget {
         Center(
           child: BpmTapper(
             child: Text(
-              roomData.current.bpm.toString(),
+              roomData.bpm.toString(),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 96.0,

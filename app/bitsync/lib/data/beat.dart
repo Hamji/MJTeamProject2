@@ -46,11 +46,9 @@ class Pattern {
 }
 
 class Sequence extends Pattern {
-  double duration;
   int repeatCount;
 
   Sequence({
-    this.duration,
     this.repeatCount = -1,
     int size,
     List<PatternElement> elements,
@@ -65,7 +63,6 @@ class Sequence extends Pattern {
 
   Map<dynamic, dynamic> toMap() {
     var map = super.toMap();
-    map["duration"] = duration;
     map["repeatCount"] = repeatCount;
     return map;
   }
@@ -74,12 +71,6 @@ class Sequence extends Pattern {
   void loadFromMap(Map<dynamic, dynamic> map) {
     super.loadFromMap(map);
     repeatCount = map.getInt("repeatCount");
-    duration = map.getDouble("duration");
-  }
-
-  int get bpm {
-    var beatLength = duration / size;
-    return (60.0 / beatLength).round();
   }
 }
 

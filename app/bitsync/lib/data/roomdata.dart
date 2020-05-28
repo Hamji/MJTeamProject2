@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:bitsync/data/beat.dart';
+import './utils.dart';
 
 class RoomData {
   final String roomId;
@@ -36,12 +37,20 @@ class RoomData {
   /// Get current sequence
   Sequence get current => sequence[currentIndex];
 
+  double duration;
+
+  int get bpm {
+    var beatLength = duration / current.size;
+    return (60.0 / beatLength).round();
+  }
+
   /// Convert to Map<String, dynamic>, use for firestore
   Map<String, dynamic> toMap() => {
         "name": name,
         "startAt": startAt,
         "sequence": sequence.map((e) => e.toMap()).toList(),
         "current": currentIndex,
+        "duration": duration,
       };
 
   /// Parse RoomData from Map<String, dynamic>, use for firestore
@@ -50,12 +59,13 @@ class RoomData {
     @required Map<String, dynamic> map,
   }) {
     print("=================== data from map ${this.roomId}, $map");
-    startAt = map["startAt"];
+    startAt = map.getInt("startAt");
     sequence = (map["sequence"] as List)
         .map((e) => e as Map<dynamic, dynamic>)
         .map((e) => Sequence.fromMap(e))
         .toList();
-    currentIndex = map["current"];
+    currentIndex = map.getInt("current");
     name = map["name"];
+    duration = map.getDouble("duration", defaultValue: 2.0);
   }
 }

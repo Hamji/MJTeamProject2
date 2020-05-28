@@ -24,9 +24,9 @@ class RoomPage extends StatelessWidget {
               var data = RoomData(roomId: roomId);
               data.startAt = DateTime.now().microsecondsSinceEpoch;
               data.currentIndex = 0;
+              data.duration = 2.0;
               data.sequence = [
                 Sequence(
-                  duration: 10.0,
                   size: 4,
                   elements: [
                     PatternElement(type: PatternType.large),
