@@ -1,0 +1,17 @@
+HTTP/2 200 OK
+date: Sat, 16 May 2020 02:33:51 GMT
+content-type: text/html; charset=UTF-8
+vary: Accept-Encoding
+x-powered-by: PHP/5.6.40
+cache-control: max-age=2592000
+expires: Mon, 15 Jun 2020 02:33:51 GMT
+x-xss-protection: 1; mode=block
+x-content-type-options: nosniff
+x-server-powered-by: Engintron
+cf-cache-status: DYNAMIC
+expect-ct: max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+server: cloudflare
+cf-ray: 5941b241bb4204e3-LAX
+content-encoding: br
+cf-request-id: 02bcedbd16000004e333000200000001
+X-Firefox-Spdy: h2

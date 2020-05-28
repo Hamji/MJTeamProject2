@@ -34,6 +34,9 @@ dependencies:
   image_picker: ^0.6.5+2
   package_info: ^0.4.0+17
   cupertino_icons: ^0.1.3
+  http: ^0.12.1
+  share: ^0.6.4+2
+  progress_dialog: ^1.2.2
 
 dev_dependencies:
   flutter_test:

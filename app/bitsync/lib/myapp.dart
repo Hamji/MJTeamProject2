@@ -1,13 +1,6 @@
 import 'package:bitsync/routes/routes.dart';
 import 'package:flutter/material.dart';
 
-final _routes = {
-  "/my-profile": (settings) => MyProfileRoute(settings),
-  "/preference": (settings) => PreferenceRoute(settings),
-  "/rooms": (settings) => RoomRoute(settings),
-  "/": (_) => RootRoute(),
-};
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -34,7 +27,6 @@ class MyApp extends StatelessWidget {
         //   "/": (context) => RootPage(),
         //   "/my-profile": (context) => MyProfilePage(),
         // },
-        onGenerateRoute: (settings) =>
-            (_routes[settings.name] ?? _routes["/"])(settings),
+        onGenerateRoute: Routing.onGenerateRoute,
       );
 }

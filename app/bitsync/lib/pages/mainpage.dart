@@ -1,7 +1,6 @@
 import 'package:bitsync/drawers/drawers.dart';
 import 'package:bitsync/pages/createnewpage.dart';
-import 'package:bitsync/pages/favoritspage.dart';
-import 'package:bitsync/services/services.dart';
+import 'package:bitsync/routes/routes.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -33,21 +32,16 @@ class MainPage extends StatelessWidget {
               caption: "Create New",
             ),
             _menuItem(
-              onPressed: () async {
-                final uri = await DynamicLinkService.createRoomLink(
-                    roomId: "142274323");
-                print(uri.toString());
-              },
+              onPressed: () => Routing.toRoom(
+                context,
+                roomId: "142274323",
+                createIfNotExist: true,
+              ),
               icon: Icons.airplay,
               caption: "Enter Room",
             ),
             _menuItem(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FavoritsPage()),
-                );
-              },
+              onPressed: () => Routing.toFavorites(context),
               icon: Icons.star,
               caption: "Favorits",
             ),
