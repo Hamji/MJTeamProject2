@@ -37,6 +37,7 @@ class RoomData {
     @required this.roomId,
     @required Map<String, dynamic> map,
   }) {
+    print("=================== data from map ${this.roomId}, $map");
     startAt = map["startAt"];
     sequence = (map["sequence"] as List)
         .map((e) => e as Map<dynamic, dynamic>)

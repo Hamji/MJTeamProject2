@@ -27,15 +27,13 @@ class RoomPage extends StatelessWidget {
               data.sequence = [
                 Sequence(
                   duration: 10.0,
-                  pattern: Pattern(
-                    size: 4,
-                    elements: [
-                      PatternElement(type: PatternType.large),
-                      PatternElement(type: PatternType.small),
-                      PatternElement(type: PatternType.small),
-                      PatternElement(type: PatternType.small),
-                    ],
-                  ),
+                  size: 4,
+                  elements: [
+                    PatternElement(type: PatternType.large),
+                    PatternElement(type: PatternType.small),
+                    PatternElement(type: PatternType.small),
+                    PatternElement(type: PatternType.small),
+                  ],
                 ),
               ];
               context.bloc<RoomBloc>().add(RoomEventCreate(data: data));
@@ -70,23 +68,8 @@ class RoomPage extends StatelessWidget {
                   ),
                 ],
               ),
-              body: Center(
-                child: Column(
-                  children: [
-                    Text(
-                      _makeRoomId(state.data.roomId),
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
-                    FlatButton.icon(
-                      onPressed: () => state.data.invite(context),
-                      icon: const Icon(Icons.share),
-                      label: const Text("Invite"),
-                    ),
-                  ],
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                ),
-              ),
+              body: RoomView(roomData: state.data),
+              backgroundColor: Colors.black,
             );
           return LoadingPage();
         },

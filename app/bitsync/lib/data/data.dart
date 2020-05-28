@@ -3,3 +3,4 @@ export './preference.dart';
 export './roomdata.dart';
 export './roomrouteparameters.dart';
 export './user.dart';
+export './utils.dart';
