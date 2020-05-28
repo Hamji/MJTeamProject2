@@ -7,6 +7,18 @@ class RoomData {
   /// name of room
   String name;
 
+  /// master of room
+  String master;
+
+  /// password of room
+  String password;
+
+  /// Authority of room
+  String authority = "read only";
+
+  /// max user of room
+  int max = 1;
+
   /// Microseconds since epoch
   int startAt;
 
