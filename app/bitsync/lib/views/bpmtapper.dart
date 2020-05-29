@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 
 int _touchTimeOffset = INITIAL_OFFSET_OF_TOUCH_TIMESTAMP;
 
-void _loadPreferences() async =>
-    _touchTimeOffset = await LocalPreferences.offsetOfTouchTimestamp();
+void _loadPreferences() async {
+  var pref = await LocalPreferences.getInstance();
+  _touchTimeOffset = pref.offsetOfTouchTimestamp;
+}
 
 class BpmTapper extends StatelessWidget {
   static final _BpmRecorder _recorder = _BpmRecorder();

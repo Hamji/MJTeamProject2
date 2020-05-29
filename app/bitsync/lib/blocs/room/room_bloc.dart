@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bitsync/data/data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import './room_event.dart';
@@ -85,8 +84,4 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         .document(room.roomId)
         .updateData(data);
   }
-}
-
-extension BuildContextRoomData on BuildContext {
-  RoomBloc get roomBloc => this.bloc<RoomBloc>();
 }

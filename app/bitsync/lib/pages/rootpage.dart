@@ -2,7 +2,6 @@ import 'package:bitsync/blocs/blocs.dart';
 import 'package:bitsync/pages/pages.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RootPage extends StatelessWidget {
   @override
@@ -18,7 +17,7 @@ class RootPage extends StatelessWidget {
           } else if (state is AuthStateSignedIn)
             return PageRouter();
           else if (state is AuthStateInitial)
-            context.bloc<AuthBloc>().add(const AuthEventInitialize());
+            context.authBloc.add(const AuthEventInitialize());
 
           return LoadingPage();
         },

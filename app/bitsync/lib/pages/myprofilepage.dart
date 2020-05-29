@@ -13,7 +13,7 @@ class MyProfilePage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
-      bloc: BlocProvider.of<AuthBloc>(context),
+      bloc: context.authBloc,
       builder: (final context, final state) {
         if (state is AuthStateSignedIn)
           return _viewPage(context, state.user);
@@ -25,7 +25,7 @@ class MyProfilePage extends StatelessWidget {
 
   void _signOut(final BuildContext context) {
     Navigator.popUntil(context, (route) => route.isFirst);
-    BlocProvider.of<AuthBloc>(context).add(const AuthEventRequestSignOut());
+    context.authBloc.add(const AuthEventRequestSignOut());
   }
 
   Widget _viewPage(final BuildContext context, final User user) => Scaffold(
@@ -42,7 +42,7 @@ class MyProfilePage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) => BlocProvider.value(
-                      value: BlocProvider.of<AuthBloc>(context),
+                      value: context.authBloc,
                       child: _MyProfileEditPage(user: user),
                     ),
                   ),
@@ -147,7 +147,7 @@ class _MyProfileEditPageState extends State<_MyProfileEditPage> {
     final state = _formKey.currentState;
     if (state.validate()) {
       state.save();
-      BlocProvider.of<AuthBloc>(context).add(AuthEventRequestUpdateProfile(
+      context.authBloc.add(AuthEventRequestUpdateProfile(
         uid: widget.user.uid,
         nickname: _nickname,
         photo: _avataFile,

@@ -1,7 +1,6 @@
 import 'package:bitsync/blocs/blocs.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   final String errorMessage;
@@ -61,9 +60,8 @@ class _GoogleSignInButton extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
         ),
         splashColor: Colors.grey,
-        onPressed: () => context
-            .bloc<AuthBloc>()
-            .add(const AuthEventRequestSignInWithGoogle()),
+        onPressed: () =>
+            context.authBloc.add(const AuthEventRequestSignInWithGoogle()),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
         highlightElevation: 0,
         borderSide: const BorderSide(color: Colors.grey),

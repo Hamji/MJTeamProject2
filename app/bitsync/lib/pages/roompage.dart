@@ -15,10 +15,10 @@ class RoomPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => BlocBuilder<RoomBloc, RoomState>(
-        bloc: context.bloc<RoomBloc>(),
+        bloc: context.roomBloc,
         builder: (context, state) {
           if (state is RoomStateInitial)
-            context.bloc<RoomBloc>().add(RoomEventInit(roomId: roomId));
+            context.roomBloc.add(RoomEventInit(roomId: roomId));
           else if (state is RoomStateNotFound) {
             if (createIfNotExit) {
               var data = RoomData(roomId: roomId);
@@ -36,7 +36,7 @@ class RoomPage extends StatelessWidget {
                   ],
                 ),
               ];
-              context.bloc<RoomBloc>().add(RoomEventCreate(data: data));
+              context.roomBloc.add(RoomEventCreate(data: data));
             } else
               return MyScaffold(
                 appBar: AppBar(

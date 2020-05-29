@@ -13,7 +13,7 @@ class MainDrawer extends StatelessWidget {
           children: <Widget>[
             DrawerHeader(
               child: BlocBuilder<AuthBloc, AuthState>(
-                bloc: BlocProvider.of<AuthBloc>(context),
+                bloc: context.authBloc,
                 builder: (context, state) => state is AuthStateSignedIn
                     ? Column(
                         children: <Widget>[

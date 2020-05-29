@@ -10,6 +10,7 @@ class TouchAdjustPage extends StatefulWidget {
 
 class _TouchAdjustPageState extends State<TouchAdjustPage> {
   int _detectedOffset;
+
   @override
   void initState() {
     _presetData.startAt = 0;
@@ -28,8 +29,7 @@ class _TouchAdjustPageState extends State<TouchAdjustPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async =>
-            LocalPreferences.setOffsetOfTouchTimestamp(_detectedOffset),
+        onPressed: () => Navigator.pop<int>(context, _detectedOffset),
         child: const Icon(Icons.save),
         tooltip: "Apply",
       ),

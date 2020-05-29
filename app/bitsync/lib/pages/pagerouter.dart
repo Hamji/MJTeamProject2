@@ -4,7 +4,6 @@ import 'package:bitsync/pages/loadingpage.dart';
 import 'package:bitsync/pages/pages.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PageRouter extends StatelessWidget {
   @override
@@ -26,7 +25,7 @@ class PageRouter extends StatelessWidget {
           );
           return MainPage();
         } else if (state is DynamicLinkStateInitial)
-          context.bloc<DynamicLinkBloc>().refresh();
+          context.dynamicLinkBloc.refresh();
         return LoadingPage();
       },
     );
