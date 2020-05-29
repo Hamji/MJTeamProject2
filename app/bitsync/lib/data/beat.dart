@@ -19,6 +19,11 @@ class PatternElement {
         "type": type.index,
         "subPattern": subPattern == null ? null : subPattern.toMap()
       };
+
+  PatternElement clone() => PatternElement(
+        type: this.type,
+        subPattern: this.subPattern?.clone() ?? null,
+      );
 }
 
 class Pattern {
@@ -43,6 +48,17 @@ class Pattern {
         .map((e) => PatternElement.fromMap(e))
         .toList();
   }
+
+  Pattern clone() {
+    var t = Pattern();
+    copyTo(t);
+    return t;
+  }
+
+  void copyTo<T extends Pattern>(T destination) {
+    destination.size = this.size;
+    destination.elements = this.elements.map((e) => e.clone()).toList();
+  }
 }
 
 class Sequence extends Pattern {
@@ -55,6 +71,17 @@ class Sequence extends Pattern {
   }) : super(
           size: size,
           elements: elements,
+        );
+
+  Sequence.createDefault()
+      : this(
+          size: 4,
+          elements: [
+            PatternElement(type: PatternType.large),
+            PatternElement(type: PatternType.small),
+            PatternElement(type: PatternType.small),
+            PatternElement(type: PatternType.small),
+          ],
         );
 
   Sequence.fromMap(final Map<dynamic, dynamic> map) {
@@ -71,6 +98,13 @@ class Sequence extends Pattern {
   void loadFromMap(Map<dynamic, dynamic> map) {
     super.loadFromMap(map);
     repeatCount = map.getInt("repeatCount");
+  }
+
+  @override
+  Sequence clone() {
+    var obj = Sequence(repeatCount: repeatCount);
+    super.copyTo(obj);
+    return obj;
   }
 }
 

@@ -1,9 +1,9 @@
 export './auth/auth.dart';
-export './beatdesigner/beatdesigner.dart';
 export './beatlist/beatlist.dart';
 export './beatlist/beatlist.dart';
 export './dynamiclink/dynamiclink.dart';
 export './fstest.dart';
 export './provider_extension.dart';
 export './room/room.dart';
+export './sequencedesigner/sequencedesigner.dart';
 export './user/user.dart';

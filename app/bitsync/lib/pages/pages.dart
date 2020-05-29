@@ -6,4 +6,5 @@ export './pagerouter.dart';
 export './preferencepage.dart';
 export './roompage.dart';
 export './rootpage.dart';
+export './sequencedesignpage.dart';
 export './touchadjustpage.dart';

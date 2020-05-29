@@ -1,6 +1,6 @@
 import 'package:bitsync/blocs/blocs.dart';
 import 'package:bitsync/data/data.dart';
-import 'package:bitsync/pages/loadingpage.dart';
+import 'package:bitsync/pages/pages.dart';
 import 'package:bitsync/views/views.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +61,22 @@ class RoomPage extends StatelessWidget {
               appBar: AppBar(
                 title: Text(roomId),
                 actions: [
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    tooltip: "Edit Sequence",
+                    onPressed: () async {
+                      final Sequence sequence = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              SequenceDesignPage(sequence: state.data.current),
+                        ),
+                      );
+                      if (sequence != null) {
+                        print("==================== update sequence");
+                      }
+                    },
+                  ),
                   IconButton(
                     icon: const Icon(Icons.share),
                     tooltip: "Invite",
