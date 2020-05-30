@@ -75,18 +75,19 @@ class _SequenceViewState extends State<SequenceView>
   }
 }
 
-const double _gridDashWidth = 7.0;
-const double _gridDashSpace = 5.0;
-const double _mediumBeatWidth = 0.667;
-const double _smallBeatWidth = 0.333;
-
 class _BeatPainter extends CustomPainter {
+  static const double _gridDashWidth = 7.0;
+  static const double _gridDashSpace = 5.0;
+  static const double _mediumBeatWidth = 0.667;
+  static const double _smallBeatWidth = 0.333;
+  static const Color _gridColor = Colors.grey;
+
   static final Paint _beatPaint = Paint()
     ..color = Colors.white
     ..strokeWidth = 5.0
     ..strokeCap = StrokeCap.round;
   static final Paint _gridPaint = Paint()
-    ..color = Colors.grey
+    ..color = _gridColor
     ..strokeWidth = 1.0
     ..blendMode = BlendMode.lighten;
   static final Paint _boundaryPaint = Paint()
@@ -127,7 +128,7 @@ class _BeatPainter extends CustomPainter {
     canvas.scale(1.0, 0.8);
     canvas.translate(0.0, (pass / duration + 1.0) * size.height);
     for (var i = 0; i < 3; i++) {
-      _drawPattern(canvas, size, roomData.current);
+      _drawPattern(canvas, size, roomData.current, 0);
       canvas.drawLine(Offset(-size.width * 0.5, 0.0),
           Offset(size.width * 0.5, 0.0), _boundaryPaint);
       canvas.translate(0.0, -size.height);
@@ -142,7 +143,7 @@ class _BeatPainter extends CustomPainter {
     for (;;) {
       int beatLength = duration ~/ pattern.size;
       int index = pass ~/ beatLength;
-      var beat = pattern.elements[index % pattern.size];
+      var beat = pattern[index % pattern.size];
       beatType = beat.type;
       if (beatType == PatternType.subPattern) {
         pass %= beatLength;
@@ -241,49 +242,68 @@ class _BeatPainter extends CustomPainter {
     final Canvas canvas,
     final Size size,
     final Pattern pattern,
+    final int depth,
   ) {
     final double h = size.height / pattern.size.toDouble();
     double y = size.height;
 
-    for (var element in pattern.elements) {
+    double gridOpacity = 1.0;
+
+    for (int i = 0; i < pattern.size; i++) {
+      var element = pattern[i];
       switch (element.type) {
         case PatternType.mute:
-          _drawGridHorizontal(canvas, half, y);
+          _drawGridHorizontal(canvas, half, y, gridOpacity);
           break;
         case PatternType.large:
-          _drawGridHorizontal(canvas, half, y);
+          _drawGridHorizontal(canvas, half, y, gridOpacity);
           canvas.drawLine(Offset(-shalf, y), Offset(shalf, y), _beatPaint);
           break;
         case PatternType.medium:
-          _drawGridHorizontal(canvas, half, y);
+          _drawGridHorizontal(canvas, half, y, gridOpacity);
           double dvt = shalf * _mediumBeatWidth;
           canvas.drawLine(Offset(-dvt, y), Offset(dvt, y), _beatPaint);
           break;
         case PatternType.small:
-          _drawGridHorizontal(canvas, half, y);
+          _drawGridHorizontal(canvas, half, y, gridOpacity);
           double dvt = shalf * _smallBeatWidth;
           canvas.drawLine(Offset(-dvt, y), Offset(dvt, y), _beatPaint);
           break;
         case PatternType.subPattern:
           canvas.save();
-          canvas.translate(0.0, y);
-          _drawPattern(canvas, Size(size.width, h), element.subPattern);
+          canvas.translate(0.0, y - h);
+          _drawPattern(
+              canvas, Size(size.width, h), element.subPattern, depth + 1);
           canvas.restore();
           break;
       }
+      if (depth > 0) gridOpacity = 0.5;
       y -= h;
     }
+  }
+
+  static final Map<int, Color> _gridColorAlphaMap = {255: _gridColor};
+  static Paint _getGridPaint(double opacity) {
+    int alpha = (opacity * 255.0).round();
+    if (_gridColorAlphaMap.containsKey(alpha))
+      _gridPaint..color = _gridColorAlphaMap[alpha];
+    else {
+      _gridPaint
+        ..color = _gridColorAlphaMap[alpha] = _gridColor.withAlpha(alpha);
+    }
+    return _gridPaint;
   }
 
   void _drawGridHorizontal(
     final Canvas canvas,
     final double halfWidth,
     final double y,
+    final double opacity,
   ) {
     double startX = -halfWidth;
     while (startX < halfWidth) {
-      canvas.drawLine(
-          Offset(startX, y), Offset(startX + _gridDashWidth, y), _gridPaint);
+      canvas.drawLine(Offset(startX, y), Offset(startX + _gridDashWidth, y),
+          _getGridPaint(opacity));
       startX += _gridDashWidth + _gridDashSpace;
     }
   }
@@ -295,8 +315,8 @@ class _BeatPainter extends CustomPainter {
   ) {
     double startY = 0.0;
     while (startY < height) {
-      canvas.drawLine(
-          Offset(x, startY), Offset(x, startY + _gridDashWidth), _gridPaint);
+      canvas.drawLine(Offset(x, startY), Offset(x, startY + _gridDashWidth),
+          _gridPaint..color = _gridColor);
       startY += _gridDashWidth + _gridDashSpace;
     }
   }

@@ -2,6 +2,18 @@ import './utils.dart';
 
 enum PatternType { mute, small, medium, large, subPattern }
 
+const Map<PatternType, String> _patternTypeName = {
+  PatternType.large: "Large",
+  PatternType.medium: "Medium",
+  PatternType.small: "Small",
+  PatternType.mute: "Mute",
+  PatternType.subPattern: "Sub-beat",
+};
+
+extension PatternTypeExtension on PatternType {
+  String get name => _patternTypeName[this];
+}
+
 class PatternElement {
   PatternType type;
   Pattern subPattern;
@@ -27,26 +39,29 @@ class PatternElement {
 }
 
 class Pattern {
-  int size;
-  List<PatternElement> elements;
+  int _size;
+  List<PatternElement> _elements;
 
-  Pattern({this.size, this.elements});
+  Pattern({int size, List<PatternElement> elements}) {
+    _elements = elements;
+    if (null != size || null != elements) this.size = size ?? elements.length;
+  }
 
   Pattern.fromMap(final Map<dynamic, dynamic> map) {
     loadFromMap(map);
   }
 
   Map<dynamic, dynamic> toMap() => {
-        "size": size,
-        "elements": elements.map((e) => e.toMap()).toList(),
+        "size": _size,
+        "elements": _elements.map((e) => e.toMap()).toList(),
       };
 
   void loadFromMap(final Map<dynamic, dynamic> map) {
-    size = map.getInt("size");
-    elements = (map["elements"] as List)
+    _elements = (map["elements"] as List)
         .map((e) => e as Map<dynamic, dynamic>)
         .map((e) => PatternElement.fromMap(e))
         .toList();
+    _size = map.getInt("size");
   }
 
   Pattern clone() {
@@ -56,8 +71,27 @@ class Pattern {
   }
 
   void copyTo<T extends Pattern>(T destination) {
-    destination.size = this.size;
-    destination.elements = this.elements.map((e) => e.clone()).toList();
+    destination._elements = this._elements.map((e) => e.clone()).toList();
+    destination._size = this._size;
+  }
+
+  int get size => _size;
+  set size(int value) {
+    assert(0 <= value);
+    _size = value;
+    if (null == _elements) _elements = [];
+    while (_elements.length < _size)
+      _elements.add(PatternElement(type: PatternType.mute));
+  }
+
+  PatternElement operator [](int i) {
+    assert(0 <= i && i < size);
+    return _elements[i];
+  }
+
+  operator []=(int i, PatternElement value) {
+    assert(0 <= i && i < size);
+    _elements[i] = value;
   }
 }
 

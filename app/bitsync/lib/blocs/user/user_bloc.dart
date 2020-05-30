@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bitsync/blocs/blocs.dart';
 import 'package:bitsync/data/data.dart';
 import 'package:bitsync/errors/errors.dart';
+import 'package:bitsync/services/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,7 +37,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   void _startListening(final String uid) {
     _stopListening();
-    _documentReference = Firestore.instance.collection("users").document(uid);
+    _documentReference = FirestoreRefs.user(uid);
     _documentReference.snapshots().listen(_onData);
   }
 

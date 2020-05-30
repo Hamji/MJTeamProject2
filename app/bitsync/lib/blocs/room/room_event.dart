@@ -1,3 +1,4 @@
+import 'package:bitsync/data/beat.dart';
 import 'package:bitsync/data/roomdata.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -39,4 +40,13 @@ class RoomEventNotFound extends RoomEvent {
 
   @override
   List<Object> get props => [roomId];
+}
+
+class RoomEventRequestUpdate extends RoomEvent {
+  final RoomData data;
+
+  RoomEventRequestUpdate({@required this.data});
+
+  @override
+  List<Object> get props => [data];
 }

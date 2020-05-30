@@ -1,10 +1,13 @@
 import 'package:bitsync/blocs/blocs.dart';
 import 'package:bitsync/data/data.dart';
 import 'package:bitsync/pages/loadingpage.dart';
+import 'package:bitsync/settings.dart';
 import 'package:bitsync/widgets/myblocprovider.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
+
+const _selectedColor = Colors.lightBlue;
 
 class SequenceDesignPage
     extends MyBlocProvider<SequenceDesignerBloc, SequenceDesignerState> {
@@ -40,6 +43,7 @@ class SequenceDesignPage
                       child: _PatternWidget(state.sequence, state),
                       flex: 1,
                     ),
+                    const SizedBox(width: 8),
                     Flexible(
                       child: _PatternEditor(state),
                       flex: 1,
@@ -62,17 +66,29 @@ class _PatternWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var children = List<Widget>();
+    var children = <Widget>[const Text("Sub-patterns")];
     for (int i = 0; i < pattern.size; i++)
-      children.add(_ElementWidget(pattern.elements[i], state));
+      children.add(_ElementWidget(pattern[i], state));
+    bool isRoot = state.sequence == pattern;
 
     var widget = Container(
-      padding: const EdgeInsets.fromLTRB(32, 5, 5, 5),
+      padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
       child: Column(children: children),
-      color: pattern == state.selectedPattern ? Colors.blueGrey : null,
+      decoration: isRoot
+          ? BoxDecoration(
+              border: Border.all(
+                color: state.selectedElement == null
+                    ? _selectedColor
+                    : Colors.grey,
+                width: 1,
+                style: BorderStyle.solid,
+              ),
+              borderRadius: BorderRadius.circular(3),
+            )
+          : null,
     );
 
-    return pattern == state.sequence
+    return isRoot
         ? GestureDetector(
             child: widget,
             onTap: () => context.sequenceDesignerBloc.add(
@@ -160,7 +176,7 @@ class _ElementWidget extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(
               color: state.selectedElement == element
-                  ? Colors.lightBlue
+                  ? _selectedColor
                   : Colors.grey,
               width: 1,
               style: BorderStyle.solid,
@@ -180,85 +196,66 @@ class _ElementWidget extends StatelessWidget {
   }
 }
 
-Map<PatternType, String> _beatTypeName = {
-  PatternType.large: "Large",
-  PatternType.medium: "Medium",
-  PatternType.small: "Small",
-  PatternType.mute: "Mute",
-  PatternType.subPattern: "Sub-beat",
-};
-
 class _PatternEditor extends StatelessWidget {
   final SequenceDesignerStateLoaded state;
 
   _PatternEditor(this.state);
 
+  Widget _buildTypeSelectTile(final BuildContext context,
+      final PatternElement element, final PatternType type,
+      {Function action}) {
+    bool selected = type == element.type;
+    return ListTile(
+      leading: selected
+          ? const Icon(Icons.radio_button_checked, color: _selectedColor)
+          : const Icon(Icons.radio_button_unchecked),
+      title: Text(
+        type.name,
+        style: selected ? const TextStyle(color: _selectedColor) : null,
+      ),
+      onTap: selected
+          ? null
+          : action ??
+              () {
+                element.type = type;
+                context.sequenceDesignerBloc
+                    .add(SequenceDesignerEventUpdate(state));
+              },
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     var element = state.selectedElement;
     List<Widget> children = [];
     if (null != element) {
       children.addAll([
-        Text("Beat Type: ${_beatTypeName[element.type]}"),
-        ListTile(
-          title: const Text("Large"),
-          onTap: element.type == PatternType.large
-              ? null
-              : () {
-                  element.type = PatternType.large;
-                  context.sequenceDesignerBloc
-                      .add(SequenceDesignerEventUpdate(state));
-                },
-        ),
-        ListTile(
-          title: const Text("Medium"),
-          onTap: element.type == PatternType.medium
-              ? null
-              : () {
-                  element.type = PatternType.medium;
-                  context.sequenceDesignerBloc
-                      .add(SequenceDesignerEventUpdate(state));
-                },
-        ),
-        ListTile(
-          title: const Text("Small"),
-          onTap: element.type == PatternType.small
-              ? null
-              : () {
-                  element.type = PatternType.small;
-                  context.sequenceDesignerBloc
-                      .add(SequenceDesignerEventUpdate(state));
-                },
-        ),
-        ListTile(
-          title: const Text("Mute"),
-          onTap: element.type == PatternType.mute
-              ? null
-              : () {
-                  element.type = PatternType.mute;
-                  context.sequenceDesignerBloc
-                      .add(SequenceDesignerEventUpdate(state));
-                },
-        ),
-        ListTile(
-          title: const Text("Sub-beat"),
-          onTap: element.type == PatternType.subPattern
-              ? null
-              : () {
-                  if (null == element.subPattern)
-                    element.subPattern = Pattern(size: 4, elements: [
-                      PatternElement(type: element.type),
-                      PatternElement(type: PatternType.mute),
-                      PatternElement(type: PatternType.mute),
-                      PatternElement(type: PatternType.mute),
-                    ]);
-                  element.type = PatternType.subPattern;
-                  context.sequenceDesignerBloc
-                      .add(SequenceDesignerEventUpdate(state));
-                },
-        ),
-        Divider(),
+        Text("Beat Type: ${element.type.name}"),
+        _buildTypeSelectTile(context, element, PatternType.large),
+        _buildTypeSelectTile(context, element, PatternType.medium),
+        _buildTypeSelectTile(context, element, PatternType.small),
+        _buildTypeSelectTile(context, element, PatternType.mute),
       ]);
+      if (state.sequence.getDepth(state.selectedElement) <
+          SUB_PATTERN_MAX_DEPTH)
+        children.add(_buildTypeSelectTile(
+          context,
+          element,
+          PatternType.subPattern,
+          action: () {
+            if (null == element.subPattern)
+              element.subPattern = Pattern(size: 4, elements: [
+                PatternElement(type: element.type),
+                PatternElement(type: PatternType.mute),
+                PatternElement(type: PatternType.mute),
+                PatternElement(type: PatternType.mute),
+              ]);
+            element.type = PatternType.subPattern;
+            context.sequenceDesignerBloc
+                .add(SequenceDesignerEventUpdate(state));
+          },
+        ));
+      children.add(const Divider());
     }
     var pattern = state.selectedPattern;
     if (null != pattern) {
@@ -270,14 +267,12 @@ class _PatternEditor extends StatelessWidget {
             pattern.size = await showDialog<int>(
               context: context,
               builder: (context) => NumberPickerDialog.integer(
-                minValue: 2,
-                maxValue: 7,
+                minValue: PATTERN_DIVIDE_MIN,
+                maxValue: PATTERN_DIVIDE_MAX,
                 initialIntegerValue: pattern.size,
                 title: const Text("Select Sub-beat size"),
               ),
             );
-            while (pattern.elements.length < pattern.size)
-              pattern.elements.add(PatternElement(type: PatternType.mute));
             context.sequenceDesignerBloc
                 .add(SequenceDesignerEventUpdate(state));
           },
@@ -286,5 +281,22 @@ class _PatternEditor extends StatelessWidget {
     }
 
     return ListView(children: children);
+  }
+}
+
+extension SequenceExtension on Pattern {
+  /// not found return 0
+  int getDepth(final PatternElement element) {
+    if (element == null) return 0;
+    for (int i = 0; i < this.size; i++) {
+      var item = this[i];
+      if (item == element)
+        return 1;
+      else if (PatternType.subPattern == item.type) {
+        var value = item.subPattern.getDepth(element);
+        if (value > 0) return value + 1;
+      }
+    }
+    return 0;
   }
 }

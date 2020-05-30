@@ -49,7 +49,7 @@ class RoomPage extends StatelessWidget {
                         _makeRoomId(state.roomId),
                         style: Theme.of(context).textTheme.headline3,
                       ),
-                      Text("Not Found"),
+                      const Text("Not Found"),
                     ],
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +59,7 @@ class RoomPage extends StatelessWidget {
           } else if (state is RoomStateUpdate)
             return MyScaffold(
               appBar: AppBar(
-                title: Text(roomId),
+                title: Text(_makeRoomId(roomId)),
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.edit),
@@ -73,7 +73,10 @@ class RoomPage extends StatelessWidget {
                         ),
                       );
                       if (sequence != null) {
-                        print("==================== update sequence");
+                        var data = state.data;
+                        data.sequence[data.currentIndex] = sequence;
+                        context.roomBloc
+                            .add(RoomEventRequestUpdate(data: data));
                       }
                     },
                   ),

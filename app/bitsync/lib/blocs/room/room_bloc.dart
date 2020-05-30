@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bitsync/data/data.dart';
+import 'package:bitsync/services/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,8 +29,11 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       _stopListening();
       yield RoomStateLoading(roomId: event.data.roomId);
       _createNewRoom(event.data);
-    }
+    } else if (event is RoomEventRequestUpdate) _updateRoomData(event.data);
   }
+
+  void _updateRoomData(final RoomData data) async =>
+      await FirestoreRefs.room(data.roomId).setData(data.toMap());
 
   @override
   Future<void> close() {
@@ -38,7 +42,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   }
 
   void _startListening(final String id) {
-    _reference = Firestore.instance.collection("rooms").document(id);
+    _reference = FirestoreRefs.room(id);
     _subscription = _reference.snapshots().listen(
           (event) => add(
             event.exists
@@ -64,10 +68,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
   void _createNewRoom(RoomData data) async {
     assert(data.roomId?.isNotEmpty ?? false);
-    await Firestore.instance
-        .collection("rooms")
-        .document(data.roomId)
-        .setData(data.toMap());
+    await FirestoreRefs.room(data.roomId).setData(data.toMap());
     _startListening(data.roomId);
   }
 
@@ -79,9 +80,6 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     if (duration > 0.0) data["duration"] = room.duration = duration;
     room.startAt = timestamp;
 
-    await Firestore.instance
-        .collection("rooms")
-        .document(room.roomId)
-        .updateData(data);
+    await FirestoreRefs.room(room.roomId).updateData(data);
   }
 }
