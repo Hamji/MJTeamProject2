@@ -8,9 +8,11 @@ import "package:flutter/material.dart";
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 
 final databaseReference = Firestore.instance;
-
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 
 class CreateRoomPage extends StatefulWidget {
@@ -21,11 +23,11 @@ class CreateRoomPage extends StatefulWidget {
 class _CreateRoomState extends State<CreateRoomPage> {
   @override
   File _roomPhoto = File('assets/images/defalut_image.jpg');
-
   RoomData _roomData = new RoomData();
 
   final passwordController = TextEditingController();
   TextEditingController roomNameController = TextEditingController();
+
 
   void onPhoto(ImageSource source) async {
     File f = await ImagePicker.pickImage(source: source);
@@ -41,14 +43,16 @@ class _CreateRoomState extends State<CreateRoomPage> {
       _roomData.name = roomNameController.text;
 
     _roomData.password = passwordController.text;
-    //.master = FirebaseAuth.instance.toString();
 
-    DocumentReference ref = await databaseReference.collection("room").add({
+    final FirebaseUser user = await _auth.currentUser();
+    final uid = user.uid;
+    _roomData.master = uid.toString();
+
+    DocumentReference ref = await databaseReference.collection("rooms").add({
       'name' : _roomData.name,
       'password' : _roomData.password,
-      'max' : _roomData.max,
       'authority' : _roomData.authority,
-      //master' : _roomData.master
+      'master' : _roomData.master
     });
   }
 
@@ -98,10 +102,7 @@ class _CreateRoomState extends State<CreateRoomPage> {
               // 설정부분 텍스트
               Column(
                 children: <Widget>[
-                  Text(
-                    'Max User',
-                    style: TextStyle(fontSize: 30.0),
-                  ),
+
                   SizedBox(
                     height: 9.0,
                   ),
@@ -114,26 +115,6 @@ class _CreateRoomState extends State<CreateRoomPage> {
               // 설정
               Column(
                 children: <Widget>[
-                  DropdownButton<int>(
-                    value: _roomData.max,
-                    hint: Text('Select Max User'),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.black,
-                    ),
-                    onChanged: (int newValue) {
-                      setState(() {
-                        _roomData.max = newValue;
-                      });
-                    },
-                    items: <int>[1, 2, 3, 4]
-                        .map<DropdownMenuItem<int>>((int value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text(value.toString()),
-                      );
-                    }).toList(),
-                  ),
                   DropdownButton<String>(
                     value: _roomData.authority,
                     hint: Text('Select Max User'),
