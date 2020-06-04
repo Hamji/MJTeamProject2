@@ -15,7 +15,7 @@ class RoomPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => BlocBuilder<RoomBloc, RoomState>(
-        bloc: context.roomBloc,
+        bloc: context.roomBloc, 
         builder: (context, state) {
           if (state is RoomStateInitial)
             context.roomBloc.add(RoomEventInit(roomId: roomId));

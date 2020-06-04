@@ -52,7 +52,8 @@ class _CreateRoomState extends State<CreateRoomPage> {
       'name' : _roomData.name,
       'password' : _roomData.password,
       'authority' : _roomData.authority,
-      'master' : _roomData.master
+      'master' : _roomData.master,
+      'sequence' : _roomData.sequence
     });
   }
 
