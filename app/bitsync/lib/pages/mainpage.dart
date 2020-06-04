@@ -18,9 +18,13 @@ class MainPage extends StatelessWidget {
           crossAxisSpacing: 4,
           children: <Widget>[
             _menuItem(
-              onPressed: null,
+              onPressed: () => Routing.toRoom(
+                context,
+                roomId: "142274323",
+                createIfNotExist: true,
+              ),
               icon: Icons.grid_on,
-              caption: "Manage Beats",
+              caption: "Enter test room", //  "Manage Beats",
             ),
             _menuItem(
               onPressed: () {
@@ -33,11 +37,6 @@ class MainPage extends StatelessWidget {
               caption: "Create New",
             ),
             _menuItem(
-              // onPressed: () => Routing.toRoom(
-              //   context,
-              //   roomId: "142274323",
-              //   createIfNotExist: true,
-              // ),
               onPressed: () async {
                 final String roomId = await Navigator.push(
                     context,
