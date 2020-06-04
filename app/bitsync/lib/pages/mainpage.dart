@@ -1,6 +1,7 @@
 import 'package:bitsync/drawers/drawers.dart';
 import 'package:bitsync/pages/createnewpage.dart';
 import 'package:bitsync/routes/routes.dart';
+import 'package:bitsync/views/views.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -32,11 +33,24 @@ class MainPage extends StatelessWidget {
               caption: "Create New",
             ),
             _menuItem(
-              onPressed: () => Routing.toRoom(
-                context,
-                roomId: "142274323",
-                createIfNotExist: true,
-              ),
+              // onPressed: () => Routing.toRoom(
+              //   context,
+              //   roomId: "142274323",
+              //   createIfNotExist: true,
+              // ),
+              onPressed: () async {
+                final String roomId = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SelectRoomDialog(),
+                    ));
+                if (null != roomId)
+                  Routing.toRoom(
+                    context,
+                    roomId: roomId,
+                    createIfNotExist: false,
+                  );
+              },
               icon: Icons.airplay,
               caption: "Enter Room",
             ),

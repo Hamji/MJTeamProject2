@@ -25,17 +25,7 @@ class RoomPage extends StatelessWidget {
               data.startAt = DateTime.now().microsecondsSinceEpoch;
               data.currentIndex = 0;
               data.duration = 2.0;
-              data.sequence = [
-                Sequence(
-                  size: 4,
-                  elements: [
-                    PatternElement(type: PatternType.large),
-                    PatternElement(type: PatternType.small),
-                    PatternElement(type: PatternType.small),
-                    PatternElement(type: PatternType.small),
-                  ],
-                ),
-              ];
+              data.sequence = [Sequence.createDefault()];
               context.roomBloc.add(RoomEventCreate(data: data));
             } else
               return MyScaffold(
