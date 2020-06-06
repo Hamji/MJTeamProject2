@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RoomRoute extends MaterialPageRoute {
-  RoomRoute(final RouteSettings settings)
+  final Builder customBuilder;
+
+  RoomRoute(final RouteSettings settings, {this.customBuilder})
       : super(
           builder: (context) {
             final parameter = settings.arguments as RoomRouteParameters;
@@ -15,12 +17,13 @@ class RoomRoute extends MaterialPageRoute {
                     value: parameter.parentContext.bloc<AuthBloc>()),
                 BlocProvider(create: (_) => RoomBloc()),
               ],
-              child: Builder(
-                builder: (context) => RoomPage(
-                  roomId: parameter.roomId,
-                  createIfNotExit: parameter.createIfNotExist,
-                ),
-              ),
+              child: customBuilder ??
+                  Builder(
+                    builder: (context) => RoomPage(
+                      roomId: parameter.roomId,
+                      createIfNotExit: parameter.createIfNotExist,
+                    ),
+                  ),
             );
           },
           settings: settings,

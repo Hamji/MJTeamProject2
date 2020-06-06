@@ -26,6 +26,7 @@ class PageRouter extends StatelessWidget {
           return MainPage();
         } else if (state is DynamicLinkStateInitial)
           context.dynamicLinkBloc.refresh();
+        print("============== DYNAMIC UPDATING");
         return LoadingPage();
       },
     );

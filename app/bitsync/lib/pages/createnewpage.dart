@@ -1,19 +1,15 @@
+import 'dart:io';
+
 import 'package:bitsync/data/data.dart';
-import 'package:bitsync/drawers/drawers.dart';
-import 'package:bitsync/services/services.dart';
 import 'package:bitsync/widgets/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
-import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-
 
 final databaseReference = Firestore.instance;
 final FirebaseAuth _auth = FirebaseAuth.instance;
-
 
 class CreateRoomPage extends StatefulWidget {
   @override
@@ -27,7 +23,6 @@ class _CreateRoomState extends State<CreateRoomPage> {
 
   final passwordController = TextEditingController();
   TextEditingController roomNameController = TextEditingController();
-
 
   void onPhoto(ImageSource source) async {
     File f = await ImagePicker.pickImage(source: source);
@@ -49,10 +44,9 @@ class _CreateRoomState extends State<CreateRoomPage> {
     _roomData.master = uid.toString();
 
     DocumentReference ref = await databaseReference.collection("rooms").add({
-      'name' : _roomData.name,
-      'password' : _roomData.password,
-      'authority' : _roomData.authority,
-      'master' : _roomData.master
+      'name': _roomData.name,
+      'password': _roomData.password,
+      'master': _roomData.master
     });
   }
 
@@ -97,49 +91,48 @@ class _CreateRoomState extends State<CreateRoomPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
           ),
           // 설정 부분
-          Row(
-            children: <Widget>[
-              // 설정부분 텍스트
-              Column(
-                children: <Widget>[
-
-                  SizedBox(
-                    height: 9.0,
-                  ),
-                  Text(
-                    'Default Authority',
-                    style: TextStyle(fontSize: 30.0),
-                  ),
-                ],
-              ),
-              // 설정
-              Column(
-                children: <Widget>[
-                  DropdownButton<String>(
-                    value: _roomData.authority,
-                    hint: Text('Select Max User'),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.black,
-                    ),
-                    onChanged: (String newValue) {
-                      setState(() {
-                        _roomData.authority = newValue;
-                      });
-                    },
-                    items: <String>['read only', 'read write']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              )
-            ],
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          ),
+          // Row(
+          //   children: <Widget>[
+          //     // 설정부분 텍스트
+          //     Column(
+          //       children: <Widget>[
+          //         SizedBox(
+          //           height: 9.0,
+          //         ),
+          //         Text(
+          //           'Default Authority',
+          //           style: TextStyle(fontSize: 30.0),
+          //         ),
+          //       ],
+          //     ),
+          //     // 설정
+          //     Column(
+          //       children: <Widget>[
+          //         DropdownButton<String>(
+          //           value: _roomData.authority,
+          //           hint: Text('Select Max User'),
+          //           underline: Container(
+          //             height: 2,
+          //             color: Colors.black,
+          //           ),
+          //           onChanged: (String newValue) {
+          //             setState(() {
+          //               _roomData.authority = newValue;
+          //             });
+          //           },
+          //           items: <String>['read only', 'read write']
+          //               .map<DropdownMenuItem<String>>((String value) {
+          //             return DropdownMenuItem<String>(
+          //               value: value,
+          //               child: Text(value),
+          //             );
+          //           }).toList(),
+          //         ),
+          //       ],
+          //     )
+          //   ],
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // ),
           TextField(
             obscureText: true,
             decoration: InputDecoration(

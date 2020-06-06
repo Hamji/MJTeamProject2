@@ -29,7 +29,17 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       _stopListening();
       yield RoomStateLoading(roomId: event.data.roomId);
       _createNewRoom(event.data);
-    } else if (event is RoomEventRequestUpdate) _updateRoomData(event.data);
+    } else if (event is RoomEventRequestUpdate)
+      _updateRoomData(event.data);
+    else if (event is RoomEventEnterMyRoom) {
+      yield RoomStateLoading(roomId: "My room");
+      _enterMyRoom(event.user);
+    }
+  }
+
+  void _enterMyRoom(final User user) async {
+    var ref = await FirestoreRefs.retrivMyRoom(user);
+    _startListening(ref.documentID);
   }
 
   void _updateRoomData(final RoomData data) async =>

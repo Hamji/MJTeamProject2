@@ -8,7 +8,11 @@ class User extends Equatable {
   final String nickname;
   final String photoUrl;
 
-  User({@required this.uid, @required this.nickname, @required this.photoUrl});
+  User({
+    @required this.uid,
+    @required this.nickname,
+    @required this.photoUrl,
+  });
 
   User.fromFirebaseUser({@required FirebaseUser firebaseUser})
       : this.uid = firebaseUser.uid,
@@ -27,4 +31,7 @@ class User extends Equatable {
 
   @override
   List<Object> get props => [uid, nickname, photoUrl];
+
+  String get myRoomID =>
+      (uid.hashCode % 1000000000).toString().padLeft(9, "0");
 }

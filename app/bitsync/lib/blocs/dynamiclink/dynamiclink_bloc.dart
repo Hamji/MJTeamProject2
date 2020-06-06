@@ -28,7 +28,9 @@ class DynamicLinkBloc extends Bloc<DynamicLinkEvent, DynamicLinkState> {
 
   void _init() async {
     if (null == _subscription) {
-      _subscription = DynamicLinkService.stream.listen(_onSuccess);
+      _subscription = DynamicLinkService.stream.listen(_onSuccess,
+          onError: (e) =>
+              print("============================ DYNAMIC ERROR $e"));
     }
     final data = await FirebaseDynamicLinks.instance.getInitialLink();
     add(DynamicLinkEventUpdated(data));
@@ -40,8 +42,10 @@ class DynamicLinkBloc extends Bloc<DynamicLinkEvent, DynamicLinkState> {
     return super.close();
   }
 
-  void _onSuccess(PendingDynamicLinkData data) async =>
-      add(DynamicLinkEventUpdated(data));
+  void _onSuccess(PendingDynamicLinkData data) {
+    print("============ LINK UPDATED: ${data.link}");
+    add(DynamicLinkEventUpdated(data));
+  }
 
   void refresh() => add(DynamicLinkEventRequestUpdate());
 }

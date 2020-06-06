@@ -14,12 +14,6 @@ class RoomData {
   /// password of room
   String password;
 
-  /// Authority of room
-  String authority = "read only";
-
-  /// max user of room
-  int max = 1;
-
   /// Microseconds since epoch
   int startAt;
 
@@ -32,7 +26,21 @@ class RoomData {
   /// Invite url for reuse
   Uri inviteUrl;
 
-  RoomData({@required this.roomId});
+  /// Can write any person
+  bool public;
+
+  RoomData({
+    @required this.roomId,
+    @required this.master,
+    this.name,
+    this.password,
+    this.startAt,
+    this.sequence,
+    this.currentIndex = 0,
+    this.public = false,
+  }) {
+    if (null == this.startAt) this.startAt = getTimestamp();
+  }
 
   /// Get current sequence
   Sequence get current => sequence[currentIndex];

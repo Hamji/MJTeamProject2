@@ -68,20 +68,21 @@ class _TouchAdjustPageState extends State<TouchAdjustPage> {
   }
 }
 
-final RoomData _presetData = new RoomData(roomId: "touchAdjustSample")
-  ..name = "Touch Adjust Sample"
-  ..startAt = 0
-  ..sequence = <Sequence>[
-    Sequence(
-      elements: [
-        PatternElement(type: PatternType.large),
-        PatternElement(type: PatternType.small),
-        PatternElement(type: PatternType.medium),
-        PatternElement(type: PatternType.small),
-      ],
-      size: 4,
-      repeatCount: -1,
-    )
-  ]
-  ..currentIndex = 0
-  ..duration = 2.0;
+final RoomData _presetData =
+    new RoomData(roomId: "touchAdjustSample", master: "master", public: true)
+      ..name = "Touch Adjust Sample"
+      ..startAt = 0
+      ..sequence = <Sequence>[
+        Sequence(
+          elements: [
+            PatternElement(type: PatternType.large),
+            PatternElement(type: PatternType.small),
+            PatternElement(type: PatternType.medium),
+            PatternElement(type: PatternType.small),
+          ],
+          size: 4,
+          repeatCount: -1,
+        )
+      ]
+      ..currentIndex = 0
+      ..duration = 2.0;
