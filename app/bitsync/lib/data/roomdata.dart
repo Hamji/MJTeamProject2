@@ -58,7 +58,7 @@ class RoomData {
   Map<String, dynamic> toMap() => {
         "name": name,
         "startAt": startAt,
-        //"sequence": sequence.map((e) => e.toMap()).toList(),
+        "sequence": sequence.map((e) => e.toMap()).toList(),
         "current": currentIndex,
         "duration": duration,
         "master": master,

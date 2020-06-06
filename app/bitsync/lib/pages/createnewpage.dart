@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:bitsync/data/data.dart';
+import 'package:bitsync/widgets/patternwidgets.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,7 +21,7 @@ class CreateRoomPage extends StatefulWidget {
 class _CreateRoomState extends State<CreateRoomPage> {
   @override
   File _roomPhoto = File('assets/images/defalut_image.jpg');
-  RoomData _roomData = new RoomData();
+  RoomData _roomData;
 
   final passwordController = TextEditingController();
   TextEditingController roomNameController = TextEditingController();
@@ -56,6 +57,14 @@ class _CreateRoomState extends State<CreateRoomPage> {
   }
   // DB에 룸 생성
   void createRecord() async {
+    final FirebaseUser user = await _auth.currentUser();
+    final uid = user.uid;
+    _roomData = new RoomData(roomId: "", master: uid.toString());
+    Sequence temp = new Sequence();
+    temp = Sequence.createDefault();
+    _roomData.sequence = [];
+    _roomData.sequence.add(temp);
+
     if (roomNameController.text == "")
       _roomData.name = "Room Name";
     else
@@ -63,9 +72,6 @@ class _CreateRoomState extends State<CreateRoomPage> {
 
     _roomData.password = passwordController.text;
 
-    final FirebaseUser user = await _auth.currentUser();
-    final uid = user.uid;
-    _roomData.master = uid.toString();
 
     int rand = 0;
     String roomNo = "";
