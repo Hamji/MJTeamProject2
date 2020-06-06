@@ -1,19 +1,11 @@
-import 'package:bitsync/drawers/drawers.dart';
-import 'package:bitsync/services/services.dart';
+import 'package:bitsync/data/user.dart';
+import 'package:bitsync/pages/authbasedpage.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 final List<String> entries = <String>[];
 
-class FavoritsPage extends StatelessWidget {
-  @override
-  Widget build(final BuildContext context) {
-    return MyScaffold(
-      appBar: AppBar(title: const Text("Favorits")),
-      body: _body(),
-    );
-  }
-
+class FavoritsPage extends AuthBasedPage {
   _body() {
     if (entries.length != 0)
       return ListView.separated(
@@ -30,7 +22,16 @@ class FavoritsPage extends StatelessWidget {
       );
     else
       return Center(
-        child: Text('Favorits is empty.', style: TextStyle(fontSize: 24.0,color: Colors.grey),),
+        child: Text(
+          'Favorits is empty.',
+          style: TextStyle(fontSize: 24.0, color: Colors.grey),
+        ),
       );
   }
+
+  @override
+  Widget onAuthenticated(BuildContext context, User user) => MyScaffold(
+        appBar: AppBar(title: const Text("Favorits")),
+        body: _body(),
+      );
 }

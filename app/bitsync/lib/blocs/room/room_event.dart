@@ -1,4 +1,4 @@
-import 'package:bitsync/data/beat.dart';
+import 'package:bitsync/data/data.dart';
 import 'package:bitsync/data/roomdata.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -22,6 +22,13 @@ class RoomEventCreate extends RoomEvent {
 
   @override
   List<Object> get props => [data];
+}
+
+class RoomEventEnterMyRoom extends RoomEvent {
+  final User user;
+  RoomEventEnterMyRoom({@required this.user});
+  @override
+  List<Object> get props => [user];
 }
 
 class RoomEventReceived extends RoomEvent {

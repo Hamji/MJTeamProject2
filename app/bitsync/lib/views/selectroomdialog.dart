@@ -1,4 +1,3 @@
-import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -21,43 +20,43 @@ class _SelectRoomDialogState extends State<SelectRoomDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MyScaffold(
-      appBar: AppBar(
-        title: const Text("Enter Room ID"),
-      ),
-      body: Form(
+  Widget build(final BuildContext context) {
+    return AlertDialog(
+      content: Form(
         key: formKey,
-        child: Column(
-          children: [
-            TextFormField(
-              validator: (value) {
-                value = value.trim();
-                if (value.isEmpty)
-                  return "Please enter id";
-                else if (null == int.tryParse(value))
-                  return "Plase enter valid id";
-                else if (value.length < 9)
-                  return "Too short";
-                else
-                  return null;
-              },
-              initialValue: roomId,
-              onChanged: (value) => setState(() => roomId = value.trim()),
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly
-              ],
-            ),
-            FlatButton(
-              child: const Text("Enter"),
-              onPressed: valid
-                  ? () {
-                      Navigator.pop(context, roomId);
-                    }
-                  : null,
-            )
-          ],
+        child: Container(
+          child: Column(
+            children: [
+              TextFormField(
+                validator: (value) {
+                  value = value.trim();
+                  if (value.isEmpty)
+                    return "Please enter id";
+                  else if (null == int.tryParse(value))
+                    return "Plase enter valid id";
+                  else if (value.length < 9)
+                    return "Too short";
+                  else
+                    return null;
+                },
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 24),
+                onSaved: (newValue) => setState(() => roomId = newValue.trim()),
+                initialValue: roomId,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                maxLength: 12,
+                decoration: InputDecoration(
+                  hintText: "9~12 digitals",
+                  labelText: "Room ID",
+                ),
+              ),
+            ],
+            mainAxisSize: MainAxisSize.min,
+          ),
+          padding: const EdgeInsets.all(10),
         ),
         // autovalidate: true,
         onChanged: () {
@@ -71,6 +70,24 @@ class _SelectRoomDialogState extends State<SelectRoomDialog> {
             });
         },
       ),
+      actions: [
+        FlatButton(
+          child: const Text("Cancel"),
+          onPressed: () => Navigator.pop(context),
+        ),
+        FlatButton(
+          child: const Text("Enter"),
+          onPressed: valid
+              ? () {
+                  formKey.currentState.save();
+                  Navigator.pop(context, roomId);
+                }
+              : null,
+        ),
+      ],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 10,
+      // backgroundColor: Colors.transparent,
     );
   }
 }

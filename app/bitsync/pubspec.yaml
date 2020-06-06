@@ -39,6 +39,7 @@ dependencies:
   progress_dialog: ^1.2.2
   shared_preferences: ^0.5.7+3
   numberpicker: ^1.2.0
+  soundpool: ^1.1.1
   
 dev_dependencies:
   flutter_test:
@@ -60,6 +61,8 @@ flutter:
   assets:
     - assets/images/logo_google.png
     - assets/images/default_image.jpg
+    - assets/sounds/beep_high.wav
+    - assets/sounds/beep_low.wav
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

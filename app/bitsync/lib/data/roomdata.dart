@@ -14,12 +14,6 @@ class RoomData {
   /// password of room
   String password;
 
-  /// Authority of room
-  String authority = "read only";
-
-  /// max user of room
-  int max = 1;
-
   /// Microseconds since epoch
   int startAt;
 
@@ -32,7 +26,21 @@ class RoomData {
   /// Invite url for reuse
   Uri inviteUrl;
 
-  RoomData({@required this.roomId});
+  /// Can write any person
+  bool public;
+
+  RoomData({
+    @required this.roomId,
+    @required this.master,
+    this.name,
+    this.password,
+    this.startAt,
+    this.sequence,
+    this.currentIndex = 0,
+    this.public = false,
+  }) {
+    if (null == this.startAt) this.startAt = getTimestamp();
+  }
 
   /// Get current sequence
   Sequence get current => sequence[currentIndex];
@@ -50,9 +58,11 @@ class RoomData {
   Map<String, dynamic> toMap() => {
         "name": name,
         "startAt": startAt,
-        "sequence": sequence.map((e) => e.toMap()).toList(),
+        //"sequence": sequence.map((e) => e.toMap()).toList(),
         "current": currentIndex,
         "duration": duration,
+        "master": master,
+        "public": public,
       };
 
   /// Parse RoomData from Map<String, dynamic>, use for firestore
@@ -69,6 +79,8 @@ class RoomData {
     currentIndex = map.getInt("current");
     name = map["name"];
     duration = map.getDouble("duration", defaultValue: 2.0);
+    master = map["master"];
+    public = map["public"] ?? false;
   }
 }
 
@@ -84,41 +96,5 @@ extension RoomDataExtension on RoomData {
 
   int get currentBeatIndex => this.getCurrentBeatIndex(getTimestamp());
 
-  // BeatInfo getCurrentBeat(int timestamp) {
-  //   int duration = (this.duration * 1e+6).toInt();
-  //   return _getCurrentBeat(
-  //     pass: (timestamp - this.startAt) % duration,
-  //     duration: duration,
-  //     pattern: this.current,
-  //   );
-  // }
-
-  // static BeatInfo _getCurrentBeat({
-  //   @required int pass,
-  //   @required int duration,
-  //   @required Pattern pattern,
-  // }) {
-  //   int beatLength = duration ~/ pattern.size;
-  //   int index = pass ~/ beatLength;
-  //   var beat = pattern.elements[index % pattern.size];
-  //   if (beat.type == PatternType.subPattern) {
-  //     return _getCurrentBeat(
-  //       pass: pass % beatLength,
-  //       duration: beatLength,
-  //       pattern: beat.subPattern,
-  //     );
-  //   } else
-  //     return BeatInfo(
-  //       type: beat.type,
-  //       elapsed: pass % beatLength * 1e-6,
-  //     );
-  // }
+  bool canEditBy(String uid) => this.public || this.master == uid;
 }
-
-// @immutable
-// class BeatInfo {
-//   final PatternType type;
-//   final double elapsed;
-
-//   BeatInfo({@required this.type, @required this.elapsed});
-// }
