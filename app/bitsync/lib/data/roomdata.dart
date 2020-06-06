@@ -62,6 +62,7 @@ class RoomData {
         "current": currentIndex,
         "duration": duration,
         "master": master,
+        "public": public,
       };
 
   /// Parse RoomData from Map<String, dynamic>, use for firestore
@@ -79,6 +80,7 @@ class RoomData {
     name = map["name"];
     duration = map.getDouble("duration", defaultValue: 2.0);
     master = map["master"];
+    public = map["public"] ?? false;
   }
 }
 
