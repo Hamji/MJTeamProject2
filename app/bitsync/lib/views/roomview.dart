@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 
 class RoomView extends StatelessWidget {
   final RoomData roomData;
+  final bool canEdit;
 
-  RoomView({Key key, @required this.roomData}) : super(key: key);
+  RoomView({
+    Key key,
+    @required this.roomData,
+    @required this.canEdit,
+  }) : super(key: key);
 
   @override
   Widget build(final BuildContext context) {
@@ -22,6 +27,7 @@ class RoomView extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            enabled: canEdit,
           ),
         ),
       ],

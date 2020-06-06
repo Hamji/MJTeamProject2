@@ -13,8 +13,7 @@ class RoomRoute extends MaterialPageRoute {
             final parameter = settings.arguments as RoomRouteParameters;
             return MultiBlocProvider(
               providers: [
-                BlocProvider.value(
-                    value: parameter.parentContext.bloc<AuthBloc>()),
+                BlocProvider.value(value: parameter.parentContext.authBloc),
                 BlocProvider(create: (_) => RoomBloc()),
               ],
               child: customBuilder ??

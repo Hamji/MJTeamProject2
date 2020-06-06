@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
-class RoomPage extends AuthenticationRequiredPage {
+class RoomPage extends AuthBasedPage {
   final String roomId;
   final bool createIfNotExit;
   final RoomEvent Function(BuildContext context, User user) onInitialize;
@@ -20,7 +20,7 @@ class RoomPage extends AuthenticationRequiredPage {
   }) : super(key: key);
 
   @override
-  Widget onSignedIn(BuildContext context, User user) =>
+  Widget onAuthenticated(BuildContext context, User user) =>
       BlocBuilder<RoomBloc, RoomState>(
         bloc: context.roomBloc,
         builder: (context, state) {
@@ -63,21 +63,23 @@ class RoomPage extends AuthenticationRequiredPage {
                   IconButton(
                     icon: const Icon(Icons.edit),
                     tooltip: "Edit Sequence",
-                    onPressed: () async {
-                      final Sequence sequence = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              SequenceDesignPage(sequence: state.data.current),
-                        ),
-                      );
-                      if (sequence != null) {
-                        var data = state.data;
-                        data.sequence[data.currentIndex] = sequence;
-                        context.roomBloc
-                            .add(RoomEventRequestUpdate(data: data));
-                      }
-                    },
+                    onPressed: state.data.canEditBy(user.uid)
+                        ? () async {
+                            final Sequence sequence = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SequenceDesignPage(
+                                    sequence: state.data.current),
+                              ),
+                            );
+                            if (sequence != null) {
+                              var data = state.data;
+                              data.sequence[data.currentIndex] = sequence;
+                              context.roomBloc
+                                  .add(RoomEventRequestUpdate(data: data));
+                            }
+                          }
+                        : null,
                   ),
                   IconButton(
                     icon: const Icon(Icons.share),
@@ -86,7 +88,10 @@ class RoomPage extends AuthenticationRequiredPage {
                   ),
                 ],
               ),
-              body: RoomView(roomData: state.data),
+              body: RoomView(
+                roomData: state.data,
+                canEdit: state.data.canEditBy(user.uid),
+              ),
               backgroundColor: Colors.black,
               setDefaultPadding: false,
             );

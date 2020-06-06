@@ -2,33 +2,17 @@ import 'dart:io';
 
 import 'package:bitsync/blocs/blocs.dart';
 import 'package:bitsync/data/data.dart';
-import 'package:bitsync/pages/pages.dart';
+import 'package:bitsync/pages/authbasedpage.dart';
 import 'package:bitsync/settings.dart';
 import 'package:bitsync/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-class MyProfilePage extends StatelessWidget {
+class MyProfilePage extends AuthBasedPage {
   @override
-  Widget build(final BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
-      bloc: context.authBloc,
-      builder: (final context, final state) {
-        if (state is AuthStateSignedIn)
-          return _viewPage(context, state.user);
-        else
-          return LoadingPage();
-      },
-    );
-  }
-
-  void _signOut(final BuildContext context) {
-    Navigator.popUntil(context, (route) => route.isFirst);
-    context.authBloc.add(const AuthEventRequestSignOut());
-  }
-
-  Widget _viewPage(final BuildContext context, final User user) => Scaffold(
+  Widget onAuthenticated(final BuildContext context, final User user) =>
+      MyScaffold(
         appBar: AppBar(title: const Text("My Profile")),
         body: Center(
           child: Column(
@@ -77,6 +61,12 @@ class MyProfilePage extends StatelessWidget {
           ),
         ),
       );
+
+  void _signOut(final BuildContext context) {
+    Navigator.popAndPushNamed(context, "/");
+    // Navigator.popUntil(context, (route) => route.isFirst);
+    context.authBloc.add(const AuthEventRequestSignOut());
+  }
 }
 
 class _MyProfileEditPage extends StatefulWidget {

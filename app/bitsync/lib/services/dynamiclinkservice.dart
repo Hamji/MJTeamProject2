@@ -47,10 +47,14 @@ class DynamicLinkService {
 
 final _streamController = StreamController<PendingDynamicLinkData>.broadcast();
 
+bool _initialized = false;
+
 void _initialize() {
+  if (_initialized) return;
+  _initialized = true;
   FirebaseDynamicLinks.instance.onLink(
     onSuccess: (data) async {
-      _streamController.add(data);
+      if (!_streamController.isClosed) _streamController.add(data);
     },
     onError: (e) async {
       print("================== DynamicLinkError ====================");

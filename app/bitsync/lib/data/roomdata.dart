@@ -61,6 +61,7 @@ class RoomData {
         "sequence": sequence.map((e) => e.toMap()).toList(),
         "current": currentIndex,
         "duration": duration,
+        "master": master,
       };
 
   /// Parse RoomData from Map<String, dynamic>, use for firestore
@@ -77,6 +78,7 @@ class RoomData {
     currentIndex = map.getInt("current");
     name = map["name"];
     duration = map.getDouble("duration", defaultValue: 2.0);
+    master = map["master"];
   }
 }
 
@@ -92,41 +94,5 @@ extension RoomDataExtension on RoomData {
 
   int get currentBeatIndex => this.getCurrentBeatIndex(getTimestamp());
 
-  // BeatInfo getCurrentBeat(int timestamp) {
-  //   int duration = (this.duration * 1e+6).toInt();
-  //   return _getCurrentBeat(
-  //     pass: (timestamp - this.startAt) % duration,
-  //     duration: duration,
-  //     pattern: this.current,
-  //   );
-  // }
-
-  // static BeatInfo _getCurrentBeat({
-  //   @required int pass,
-  //   @required int duration,
-  //   @required Pattern pattern,
-  // }) {
-  //   int beatLength = duration ~/ pattern.size;
-  //   int index = pass ~/ beatLength;
-  //   var beat = pattern.elements[index % pattern.size];
-  //   if (beat.type == PatternType.subPattern) {
-  //     return _getCurrentBeat(
-  //       pass: pass % beatLength,
-  //       duration: beatLength,
-  //       pattern: beat.subPattern,
-  //     );
-  //   } else
-  //     return BeatInfo(
-  //       type: beat.type,
-  //       elapsed: pass % beatLength * 1e-6,
-  //     );
-  // }
+  bool canEditBy(String uid) => this.public || this.master == uid;
 }
-
-// @immutable
-// class BeatInfo {
-//   final PatternType type;
-//   final double elapsed;
-
-//   BeatInfo({@required this.type, @required this.elapsed});
-// }

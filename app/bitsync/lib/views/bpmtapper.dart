@@ -15,29 +15,32 @@ void _loadPreferences() async {
 class BpmTapper extends StatelessWidget {
   static final _BpmRecorder _recorder = _BpmRecorder();
   final Widget child;
+  final bool enabled;
 
-  BpmTapper({@required this.child});
+  BpmTapper({@required this.child, this.enabled = false});
 
   @override
   Widget build(final BuildContext context) {
     _loadPreferences();
     return FlatButton(
-      onPressed: () {
-        final state = context.roomBloc.state;
-        if (state is RoomStateUpdate) {
-          _recorder.update(state.data);
-          var timestamp = getTimestamp() - _touchTimeOffset;
-          var sequenceDuration = _recorder.touch(state.data, timestamp);
+      onPressed: enabled
+          ? () {
+              final state = context.roomBloc.state;
+              if (state is RoomStateUpdate) {
+                _recorder.update(state.data);
+                var timestamp = getTimestamp() - _touchTimeOffset;
+                var sequenceDuration = _recorder.touch(state.data, timestamp);
 
-          if (sequenceDuration > 0.0)
-            context.roomBloc.updateBpm(
-              _recorder.startAt,
-              duration: sequenceDuration,
-            );
-          else
-            context.roomBloc.updateBpm(_recorder.startAt);
-        }
-      },
+                if (sequenceDuration > 0.0)
+                  context.roomBloc.updateBpm(
+                    _recorder.startAt,
+                    duration: sequenceDuration,
+                  );
+                else
+                  context.roomBloc.updateBpm(_recorder.startAt);
+              }
+            }
+          : null,
       child: child,
     );
   }
