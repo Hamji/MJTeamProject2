@@ -3,18 +3,18 @@ import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
 @immutable
-abstract class UserRoomsEvent extends Equatable {}
+abstract class RoomListEvent extends Equatable {}
 
-class UserRoomsEventInit extends UserRoomsEvent {
+class RoomListEventInit extends RoomListEvent {
   final String uid;
-  UserRoomsEventInit(this.uid);
+  RoomListEventInit(this.uid);
   @override
   List<Object> get props => [uid];
 }
 
-class UserRoomsEventResponse extends UserRoomsEvent {
+class RoomListEventResponse extends RoomListEvent {
   final String uid;
   final List<RoomData> rooms;
-  UserRoomsEventResponse({this.uid, this.rooms});
+  RoomListEventResponse({this.uid, this.rooms});
   List<Object> get props => [uid, rooms];
 }

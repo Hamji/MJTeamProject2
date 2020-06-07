@@ -5,6 +5,6 @@ export './dynamiclink/dynamiclink.dart';
 export './fstest.dart';
 export './provider_extension.dart';
 export './room/room.dart';
+export './roomlist/roomlist.dart';
 export './sequencedesigner/sequencedesigner.dart';
 export './user/user.dart';
-export './userrooms/userrooms.dart';

@@ -7,6 +7,7 @@ final _routes = {
   ROUTE_PREFERENCE: (settings) => PreferenceRoute(settings),
   ROUTE_FAVORITES: (settings) => FavoritesRoute(settings),
   ROUTE_ROOM: (settings) => RoomRoute(settings),
+  ROUTE_ROOM_LIST: (settings) => RoomListRoute(settings),
   ROUTE_MY_ROOM: (settings) => MyRoomRoute(settings),
   ROUTE_ROOT: (_) => RootRoute(),
 };
@@ -37,6 +38,19 @@ class Routing {
           parentContext: context,
           roomId: user.myRoomID,
           createIfNotExist: true,
+        ),
+      );
+
+  static void toRoomList(
+    BuildContext context, {
+    @required User listOwner,
+  }) =>
+      Navigator.pushNamed(
+        context,
+        ROUTE_ROOM_LIST,
+        arguments: RoomListRouteParameters(
+          parentContext: context,
+          listOwner: listOwner,
         ),
       );
 

@@ -3,28 +3,28 @@ import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
 @immutable
-abstract class UserRoomsState {
-  const UserRoomsState();
+abstract class RoomListState {
+  const RoomListState();
 }
 
-class UserRoomsStateInitial extends UserRoomsState {
-  const UserRoomsStateInitial();
+class RoomListStateInitial extends RoomListState {
+  const RoomListStateInitial();
 }
 
-class UserRoomsStateLoading extends UserRoomsState implements EquatableMixin {
+class RoomListStateLoading extends RoomListState implements EquatableMixin {
   final String uid;
-  UserRoomsStateLoading(this.uid);
+  RoomListStateLoading(this.uid);
   @override
   List<Object> get props => [uid];
   @override
   bool get stringify => false;
 }
 
-class UserRoomsStateResponse extends UserRoomsState implements EquatableMixin {
+class RoomListStateResponse extends RoomListState implements EquatableMixin {
   final String uid;
   final List<RoomData> rooms;
 
-  UserRoomsStateResponse({
+  RoomListStateResponse({
     @required this.uid,
     @required this.rooms,
   });

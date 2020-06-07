@@ -2,6 +2,7 @@ export './favoritesroute.dart';
 export './myprofileroute.dart';
 export './myroomroute.dart';
 export './preferenceroute.dart';
+export './roomlistroute.dart';
 export './roomroute.dart';
 export './rootroute.dart';
 export './routenames.dart';

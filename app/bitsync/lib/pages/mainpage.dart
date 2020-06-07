@@ -70,20 +70,22 @@ class _HomePageState extends State<_HomePage> {
                 icon: Icons.grid_on,
                 caption: "Enter test room", //  "Manage Beats",
               ),
-               _menuItem(
-                 onPressed: () {
-                   Navigator.push(
-                     context,
-                     MaterialPageRoute(builder: (context) => CreateRoomPage()),
-                   );
-                 },
-                 icon: Icons.create_new_folder,
-                 caption: "Create New",
-               ),
               _menuItem(
-                onPressed: () => Routing.toMyRoom(context, user: widget.user),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CreateRoomPage()),
+                  );
+                },
+                icon: Icons.create_new_folder,
+                caption: "Create New",
+              ),
+              _menuItem(
+                // onPresseed: () => Routing.toMyRoom(context, user: widget.user),
+                onPressed: () =>
+                    Routing.toRoomList(context, listOwner: widget.user),
                 icon: Icons.home,
-                caption: "Enter my room",
+                caption: "My rooms",
               ),
               _menuItem(
                 onPressed: () async {

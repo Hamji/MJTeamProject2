@@ -8,3 +8,4 @@ export './preferencepage.dart';
 export './roompage.dart';
 export './sequencedesignpage.dart';
 export './touchadjustpage.dart';
+export './roomlistpage.dart';
