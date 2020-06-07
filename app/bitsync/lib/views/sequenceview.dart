@@ -135,7 +135,7 @@ class _BeatPainter extends CustomPainter {
     canvas.save();
     final timestamp = getTimestamp();
     final int duration = roomData.durationMicroseconds;
-    int pass = (timestamp - roomData.startAt) % duration;
+    final int pass = (timestamp - roomData.startAt) % duration;
     final int currentStart = timestamp - pass;
 
     canvas.translate(size.width * 0.5, 0.0);
@@ -174,15 +174,14 @@ class _BeatPainter extends CustomPainter {
     var beats = roomData.current.getBeats(duration);
     int index = 0;
     int elapsedCurrent = currentStart;
-    while (pass > beats[index].length) {
+    while (timestamp > beats[index].length + elapsedCurrent) {
       var length = beats[index++].length;
-      pass -= length;
       elapsedCurrent += length;
     }
 
     var currentBeat = beats[index];
     beatType = currentBeat.type;
-    beatElapsed = pass * 1e-6;
+    beatElapsed = (timestamp - elapsedCurrent) * 1e-6;
 
     nextBeatType = beats[(index + 1) % beats.length].type;
     nextBeatTimestamp = elapsedCurrent + currentBeat.length;

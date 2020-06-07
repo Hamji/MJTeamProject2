@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bitsync/data/data.dart';
 import 'package:bitsync/pages/pages.dart';
 import 'package:bitsync/widgets/widgets.dart';
@@ -18,13 +20,20 @@ class _PreferencePageState extends State<PreferencePage> {
   LocalPreferences _preferences;
   int _updateTick;
 
+  double beepSoundDelay;
+  double bpmDragScale;
+
   @override
   void initState() {
     _appName = _buildNumber = _version = "Loading...";
     _updateTick = 0;
     _loadAppInfo();
-    LocalPreferences.getInstance()
-        .then((value) => setState(() => _preferences = value));
+    LocalPreferences.getInstance().then((value) => setState(() {
+          _preferences = value;
+          beepSoundDelay =
+              min(max(-200.0, _preferences.beepSoundDelay * 0.001), 200.0);
+          bpmDragScale = _preferences.dragBPMscale * 5.0;
+        }));
     super.initState();
   }
 
@@ -59,6 +68,21 @@ class _PreferencePageState extends State<PreferencePage> {
             leading: _preferences.useBeepSound
                 ? const Icon(Icons.volume_up)
                 : const Icon(Icons.volume_off),
+          ),
+          invListTile(
+            "Beep sound delay: ${beepSoundDelay.toStringAsFixed(0)} ms",
+            Slider(
+              onChanged: _preferences.useBeepSound
+                  ? (value) => setState(() => beepSoundDelay = value)
+                  : null,
+              onChangeEnd: (value) async {
+                await _preferences.setBeepSoundDelay((value * 1000.0).floor());
+                setState(() => beepSoundDelay = value);
+              },
+              value: beepSoundDelay,
+              max: 200.0,
+              min: -200.0,
+            ),
           ),
           invListTile(
             "Touch time offset (milliseconds)",
@@ -96,15 +120,16 @@ class _PreferencePageState extends State<PreferencePage> {
             ),
           ),
           invListTile(
-            "BPM dragging scale: ${_preferences.dragBPMscale.toStringAsFixed(1)}",
+            "BPM dragging scale: ${bpmDragScale.toStringAsFixed(0)}",
             Slider(
-              onChanged: _preferences.useBPMdrag
+              onChanged: (value) => setState(() => bpmDragScale = value),
+              onChangeEnd: _preferences.useBPMdrag
                   ? (value) async {
                       await _preferences.setDragBPMscale(value * 0.2);
-                      _refresh();
+                      setState(() => bpmDragScale = value);
                     }
                   : null,
-              value: _preferences.dragBPMscale * 5.0,
+              value: bpmDragScale,
               // label: _preferences.dragBPMscale.toString(),
               // divisions: 19,
               max: 10.0,

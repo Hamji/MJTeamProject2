@@ -2,6 +2,7 @@ import 'package:bitsync/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const _kUseBeepSound = "useBeepSound";
+const _kBeepSoundDelay = "beepSoundDelay";
 const _kOffsetOfTouchTimestamp = "offsetOfTouchTimestamp";
 const _kUseBPMdrag = "useBPMdrag";
 const _kDragBPMscale = "dragBPMscale";
@@ -24,7 +25,15 @@ class LocalPreferences {
   bool get useBeepSound =>
       !_prefs.containsKey(_kUseBeepSound) || _prefs.getBool(_kUseBeepSound);
 
-  Future<bool> setUseBeepSound(value) => _prefs.setBool(_kUseBeepSound, value);
+  Future<bool> setUseBeepSound(bool value) =>
+      _prefs.setBool(_kUseBeepSound, value);
+
+  int get beepSoundDelay => _prefs.containsKey(_kBeepSoundDelay)
+      ? _prefs.getInt(_kBeepSoundDelay)
+      : 0;
+
+  Future<bool> setBeepSoundDelay(int value) =>
+      _prefs.setInt(_kBeepSoundDelay, value);
 
   bool get useBPMdrag =>
       !_prefs.containsKey(_kUseBPMdrag) || _prefs.getBool(_kUseBPMdrag);

@@ -19,6 +19,7 @@ class BeepPlayerProvider extends StatefulWidget {
 }
 
 class _BeepPlayerPrividerState extends State<BeepPlayerProvider> {
+  int delay;
   Soundpool pool;
   BeepPlayer player;
 
@@ -29,6 +30,8 @@ class _BeepPlayerPrividerState extends State<BeepPlayerProvider> {
   }
 
   void _init() async {
+    delay = (await LocalPreferences.getInstance()).beepSoundDelay;
+
     pool = Soundpool(streamType: StreamType.music);
 
     int low = await rootBundle
@@ -38,7 +41,7 @@ class _BeepPlayerPrividerState extends State<BeepPlayerProvider> {
         .load("assets/sounds/beep_high.wav")
         .then((data) => pool.load(data));
 
-    setState(() => player = BeepPlayer(pool, low, high));
+    setState(() => player = BeepPlayer(pool, low, high, delay));
   }
 
   @override
@@ -60,10 +63,12 @@ class _BeepPlayerPrividerState extends State<BeepPlayerProvider> {
   }
 }
 
-const _DELAY_HIGH = 100000 + 5000;
-const _DELAY_LOW = 100000 + 10000;
+const _DELAY_BASE = 0;
+const _DELAY_HIGH = _DELAY_BASE + 5000;
+const _DELAY_LOW = _DELAY_BASE + 10000;
 
 class BeepPlayer {
+  final int _delay;
   final Soundpool _pool;
   final int _low;
   final int _high;
@@ -71,10 +76,11 @@ class BeepPlayer {
   int _streamLow;
   int _streamHigh;
 
-  BeepPlayer(Soundpool pool, int low, int high)
+  BeepPlayer(Soundpool pool, int low, int high, int delay)
       : this._pool = pool,
         this._low = low,
-        this._high = high;
+        this._high = high,
+        this._delay = -delay;
 
   void playLow() async {
     if (null != _streamLow) await _pool.stop(_streamLow);
@@ -96,7 +102,7 @@ class BeepPlayer {
       _task?.cancel();
       _queuedType = type;
       _queuedTimestamp = timestamp;
-      int wait = timestamp - getTimestamp();
+      int wait = timestamp - getTimestamp() + _delay;
       Function play;
       if (type == PatternType.large) {
         wait -= _DELAY_HIGH;
