@@ -14,6 +14,13 @@ extension PatternTypeExtension on PatternType {
   String get name => _patternTypeName[this];
 }
 
+class Beat {
+  final PatternType type;
+  final int length;
+
+  Beat(this.type, this.length);
+}
+
 class PatternElement {
   PatternType type;
   Pattern subPattern;
@@ -93,6 +100,24 @@ class Pattern {
     assert(0 <= i && i < size);
     _elements[i] = value;
   }
+
+  void _getBeats(int length, List<Beat> result) {
+    int subLength = length ~/ _size;
+    PatternElement element = _elements[0];
+
+    if (element.type == PatternType.subPattern)
+      element.subPattern._getBeats(length - subLength * (_size - 1), result);
+    else
+      result.add(Beat(element.type, length - subLength * (_size - 1)));
+
+    for (int i = 1; i < _size; i++) {
+      element = _elements[i];
+      if (element.type == PatternType.subPattern)
+        element.subPattern._getBeats(subLength, result);
+      else
+        result.add(Beat(element.type, subLength));
+    }
+  }
 }
 
 class Sequence extends Pattern {
@@ -140,23 +165,15 @@ class Sequence extends Pattern {
     super.copyTo(obj);
     return obj;
   }
-}
 
-class Beat {
-  int size;
-  List<Sequence> sequence;
+  List<Beat> _beats;
 
-  Beat({this.size = 0, this.sequence = const []});
-
-  Beat.fromMap(final Map<String, dynamic> map) {
-    size = map.getInt("size");
-    sequence = (map["sequence"] as List<Map<dynamic, dynamic>>)
-        .map((e) => Sequence.fromMap(e))
-        .toList();
+  /// length is microseconds
+  List<Beat> getBeats(int length) {
+    if (null == _beats) {
+      _beats = List<Beat>();
+      _getBeats(length, _beats);
+    }
+    return _beats;
   }
-
-  Map<String, dynamic> toMap() => {
-        "size": size,
-        "sequence": sequence.map((s) => s.toMap()).toList(),
-      };
 }

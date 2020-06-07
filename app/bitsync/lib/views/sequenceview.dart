@@ -1,10 +1,16 @@
 import 'package:bitsync/data/data.dart';
+import 'package:bitsync/services/beepplayer.dart';
 import 'package:flutter/material.dart';
 
 class SequenceView extends StatefulWidget {
   final RoomData roomData;
+  final BeepPlayer beepPlayer;
 
-  SequenceView({Key key, @required this.roomData}) : super(key: key);
+  SequenceView({
+    Key key,
+    @required this.roomData,
+    this.beepPlayer,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SequenceViewState();
@@ -53,6 +59,7 @@ class _SequenceViewState extends State<SequenceView>
                 painter: _BeatPainter(
                   roomData: roomData,
                   tick: tick,
+                  beepPlayer: widget.beepPlayer,
                 ),
               ),
               width: constraints.maxWidth,
@@ -108,11 +115,17 @@ class _BeatPainter extends CustomPainter {
 
   final RoomData roomData;
   final int tick;
+  final BeepPlayer beepPlayer;
 
   double half;
   double shalf;
 
-  _BeatPainter({@required this.roomData, @required this.tick});
+  /// beepPlayer nullable
+  _BeatPainter({
+    @required this.roomData,
+    @required this.tick,
+    @required this.beepPlayer,
+  });
 
   @override
   void paint(final Canvas canvas, final Size size) {
@@ -120,9 +133,10 @@ class _BeatPainter extends CustomPainter {
     shalf = half * 0.8;
 
     canvas.save();
-    var _latestUpdatedAt = getTimestamp();
-    int duration = roomData.durationMicroseconds;
-    int pass = (_latestUpdatedAt - roomData.startAt) % duration;
+    final timestamp = getTimestamp();
+    final int duration = roomData.durationMicroseconds;
+    int pass = (timestamp - roomData.startAt) % duration;
+    final int currentStart = timestamp - pass;
 
     canvas.translate(size.width * 0.5, 0.0);
     canvas.scale(1.0, 0.8);
@@ -136,24 +150,43 @@ class _BeatPainter extends CustomPainter {
     canvas.restore();
 
     /// draw flash light
-    PatternType beatType;
-    Pattern pattern = roomData.current;
-    double beatElapsed;
 
-    for (;;) {
-      int beatLength = duration ~/ pattern.size;
-      int index = pass ~/ beatLength;
-      var beat = pattern[index % pattern.size];
-      beatType = beat.type;
-      if (beatType == PatternType.subPattern) {
-        pass %= beatLength;
-        duration = beatLength;
-        pattern = beat.subPattern;
-      } else {
-        beatElapsed = pass % beatLength * 1e-6;
-        break;
-      }
+    PatternType beatType, nextBeatType;
+    double beatElapsed;
+    int nextBeatTimestamp;
+
+    // Pattern pattern = roomData.current;
+    // for (;;) {
+    //   int beatLength = duration ~/ pattern.size;
+    //   int index = pass ~/ beatLength;
+    //   var beat = pattern[index % pattern.size];
+    //   beatType = beat.type;
+    //   if (beatType == PatternType.subPattern) {
+    //     pass %= beatLength;
+    //     duration = beatLength;
+    //     pattern = beat.subPattern;
+    //   } else {
+    //     beatElapsed = pass % beatLength * 1e-6;
+    //     break;
+    //   }
+    // }
+
+    var beats = roomData.current.getBeats(duration);
+    int index = 0;
+    int elapsedCurrent = currentStart;
+    while (pass > beats[index].length) {
+      var length = beats[index++].length;
+      pass -= length;
+      elapsedCurrent += length;
     }
+
+    var currentBeat = beats[index];
+    beatType = currentBeat.type;
+    beatElapsed = pass * 1e-6;
+
+    nextBeatType = beats[(index + 1) % beats.length].type;
+    nextBeatTimestamp = elapsedCurrent + currentBeat.length;
+    beepPlayer?.queue(nextBeatTimestamp, nextBeatType);
 
     double lightPower;
     double lightDuration;

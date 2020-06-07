@@ -1,15 +1,21 @@
+import 'dart:async';
+
+import 'package:bitsync/data/data.dart';
 import 'package:bitsync/pages/loadingpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:soundpool/soundpool.dart';
 
-abstract class BeepPlayerProvider extends StatefulWidget {
-  BeepPlayerProvider({Key key}) : super(key: key);
+class BeepPlayerProvider extends StatefulWidget {
+  final Widget Function(BuildContext context, BeepPlayer beepPlayer) builder;
+
+  BeepPlayerProvider({Key key, this.builder}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _BeepPlayerPrividerState();
 
-  Widget build(BuildContext context, BeepPlayer beepPlayer);
+  Widget build(BuildContext context, BeepPlayer beepPlayer) =>
+      builder(context, beepPlayer);
 }
 
 class _BeepPlayerPrividerState extends State<BeepPlayerProvider> {
@@ -45,13 +51,17 @@ class _BeepPlayerPrividerState extends State<BeepPlayerProvider> {
 
   @override
   void dispose() async {
+    super.dispose();
     if (null != pool) {
       await pool.release();
+      player?.invalidate();
       player = null;
     }
-    super.dispose();
   }
 }
+
+const _DELAY_HIGH = 100000 + 5000;
+const _DELAY_LOW = 100000 + 10000;
 
 class BeepPlayer {
   final Soundpool _pool;
@@ -66,13 +76,43 @@ class BeepPlayer {
         this._low = low,
         this._high = high;
 
-  playLow() async {
+  void playLow() async {
     if (null != _streamLow) await _pool.stop(_streamLow);
     _streamLow = await _pool.play(_low);
   }
 
-  playHigh() async {
+  void playHigh() async {
     if (null != _streamHigh) await _pool.stop(_streamHigh);
     _streamHigh = await _pool.play(_high);
+  }
+
+  PatternType _queuedType;
+  int _queuedTimestamp;
+  Timer _task;
+
+  void queue(final int timestamp, final PatternType type) async {
+    if ((type == PatternType.large || type == PatternType.medium) &&
+        (_queuedTimestamp != timestamp || _queuedType != type)) {
+      _task?.cancel();
+      _queuedType = type;
+      _queuedTimestamp = timestamp;
+      int wait = timestamp - getTimestamp();
+      Function play;
+      if (type == PatternType.large) {
+        wait -= _DELAY_HIGH;
+        play = playHigh;
+      } else {
+        wait -= _DELAY_LOW;
+        play = playLow;
+      }
+      if (wait > 0)
+        _task = Timer(Duration(microseconds: wait), () async {
+          await play.call();
+        });
+    }
+  }
+
+  void invalidate() {
+    _task.cancel();
   }
 }

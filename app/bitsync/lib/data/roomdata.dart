@@ -49,10 +49,12 @@ class RoomData {
 
   int get durationMicroseconds => (duration * 1e+6).toInt();
 
-  int get bpm {
-    var beatLength = duration / current.size;
-    return (60.0 / beatLength).round();
-  }
+  // int get bpm {
+  //   var beatLength = duration / current.size;
+  //   return (60.0 / beatLength).round();
+  // }
+
+  int get bpm => toBPM(duration, current.size);
 
   /// Convert to Map<String, dynamic>, use for firestore
   Map<String, dynamic> toMap() => {
@@ -103,3 +105,7 @@ extension RoomDataExtension on RoomData {
 
 String beautifyRoomID(String roomId) =>
     "${roomId.substring(0, roomId.length - 6)} ${roomId.substring(roomId.length - 6, roomId.length - 3)} ${roomId.substring(roomId.length - 3)}";
+
+int toBPM(double duration, int size) => (60.0 / duration * size).round();
+
+double toDuration(int bpm, int size) => 60.0 * size / bpm;

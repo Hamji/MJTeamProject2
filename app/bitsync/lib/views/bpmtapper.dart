@@ -4,44 +4,124 @@ import 'package:bitsync/blocs/blocs.dart';
 import 'package:bitsync/data/data.dart';
 import 'package:bitsync/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 int _touchTimeOffset = INITIAL_OFFSET_OF_TOUCH_TIMESTAMP;
+double _dragScale = 1.0;
+bool _enableDrag = false;
 
-void _loadPreferences() async {
+void _loadPreferences({Function callback}) async {
   var pref = await LocalPreferences.getInstance();
   _touchTimeOffset = pref.offsetOfTouchTimestamp;
+  _enableDrag = pref.useBPMdrag;
+  _dragScale = pref.dragBPMscale;
+  callback?.call();
 }
 
-class BpmTapper extends StatelessWidget {
-  static final _BpmRecorder _recorder = _BpmRecorder();
-  final Widget child;
+class BpmTapper extends StatefulWidget {
   final bool enabled;
+  final TextStyle style;
+  final RoomData roomData;
 
-  BpmTapper({@required this.child, this.enabled = false});
+  BpmTapper({@required this.roomData, this.enabled = false, this.style});
+
+  @override
+  State<StatefulWidget> createState() => _BpmTapperState();
+}
+
+class _BpmTapperState extends State<BpmTapper> {
+  static final _BpmRecorder _recorder = _BpmRecorder();
+
+  bool preferenceLoaded;
+  Offset dragStart;
+  double currentBPM;
+  double targetBpm;
+
+  @override
+  void initState() {
+    preferenceLoaded = false;
+    _loadPreferences(callback: () => setState(() => preferenceLoaded = true));
+    super.initState();
+  }
+
+  Widget child(BuildContext context) => null == targetBpm
+      ? Text(widget.roomData.bpm.toString(), style: widget.style)
+      : Text(
+          targetBpm.toStringAsFixed(0),
+          style: widget.style?.apply(color: Colors.white60) ??
+              const TextStyle(color: Colors.white60),
+        );
 
   @override
   Widget build(final BuildContext context) {
-    _loadPreferences();
-    return FlatButton(
-      onPressed: enabled
-          ? () {
-              final state = context.roomBloc.state;
-              if (state is RoomStateUpdate) {
-                _recorder.update(state.data);
-                var timestamp = getTimestamp() - _touchTimeOffset;
-                var sequenceDuration = _recorder.touch(state.data, timestamp);
+    if (!widget.enabled) return child(context);
 
-                if (sequenceDuration > 0.0)
-                  context.roomBloc.updateBpm(
-                    _recorder.startAt,
-                    duration: sequenceDuration,
-                  );
-                else
-                  context.roomBloc.updateBpm(_recorder.startAt);
-              }
+    return GestureDetector(
+      onTap: () {
+        final state = context.roomBloc.state;
+        if (state is RoomStateUpdate) {
+          _recorder.update(state.data);
+          var timestamp = getTimestamp() - _touchTimeOffset;
+          var sequenceDuration = _recorder.touch(state.data, timestamp);
+
+          if (sequenceDuration > 0.0)
+            context.roomBloc.updateTimeSync(
+              _recorder.startAt,
+              duration: sequenceDuration,
+            );
+          else
+            context.roomBloc.updateTimeSync(_recorder.startAt);
+        }
+      },
+      onLongPress: () async {
+        if (null != dragStart) return;
+        int newBPM = await showDialog<int>(
+          context: context,
+          builder: (context) => NumberPickerDialog.integer(
+            initialIntegerValue: widget.roomData.bpm,
+            minValue: 20,
+            maxValue: 480,
+            title: const Text("New BPM"),
+          ),
+        );
+        if (null != newBPM) {
+          _recorder.update(widget.roomData);
+          _recorder.touch(widget.roomData, getTimestamp());
+          context.roomBloc.updateTimeSync(_recorder.startAt, bpm: newBPM);
+        }
+      },
+      onVerticalDragStart: _enableDrag
+          ? (e) {
+              dragStart = e.globalPosition;
+              currentBPM = widget.roomData.bpm.toDouble();
             }
           : null,
-      child: child,
+      onVerticalDragUpdate: (e) {
+        if (null != dragStart) {
+          var delta = (e.globalPosition - dragStart);
+          var vector = delta.dx + delta.dy * -0.1;
+          vector *= _dragScale;
+          double newTargetBpm = currentBPM + vector;
+          setState(() => targetBpm = newTargetBpm);
+        }
+      },
+      onVerticalDragCancel: () => setState(() {
+        targetBpm = null;
+        dragStart = null;
+      }),
+      onVerticalDragEnd: (e) {
+        if (null != targetBpm) {
+          _recorder.update(widget.roomData);
+          _recorder.touch(widget.roomData, getTimestamp());
+          context.roomBloc.updateTimeSync(
+            _recorder.startAt,
+            bpm: targetBpm.round(),
+          );
+        }
+        targetBpm = null;
+        dragStart = null;
+      },
+      child: child(context),
     );
   }
 }

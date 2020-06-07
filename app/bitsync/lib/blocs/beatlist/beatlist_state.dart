@@ -23,7 +23,7 @@ class BeatListStateLoading extends BeatListState {
 
 class BeatListStateReceived extends BeatListState {
   final String uid;
-  final List<Beat> list;
+  final List<Sequence> list;
 
   BeatListStateReceived({@required this.uid, @required this.list});
 

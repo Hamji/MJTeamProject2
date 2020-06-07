@@ -30,6 +30,8 @@ class _PreferencePageState extends State<PreferencePage> {
 
   @override
   Widget build(final BuildContext context) {
+    if (null == _preferences) return LoadingPage();
+
     final theme = Theme.of(context);
 
     final invListTile = (final String subtitle, final Widget child) => ListTile(
@@ -46,27 +48,67 @@ class _PreferencePageState extends State<PreferencePage> {
       ),
       body: ListView(
         children: [
+          ListTile(
+            onTap: () async {
+              if (await _preferences
+                  .setUseBeepSound(!_preferences.useBeepSound)) _refresh();
+            },
+            title: _preferences.useBeepSound
+                ? const Text("Beep Sound: On")
+                : const Text("Beep Sound: Mute"),
+            leading: _preferences.useBeepSound
+                ? const Icon(Icons.volume_up)
+                : const Icon(Icons.volume_off),
+          ),
           invListTile(
             "Touch time offset (milliseconds)",
             FlatButton.icon(
-              onPressed: _preferences == null
-                  ? null
-                  : () async {
-                      int result = await Navigator.push<int>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => TouchAdjustPage(),
-                        ),
-                      );
-                      if (null != result) {
-                        await _preferences.setOffsetOfTouchTimestamp(result);
-                        _refresh();
-                      }
-                    },
+              onPressed: () async {
+                int result = await Navigator.push<int>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => TouchAdjustPage(),
+                  ),
+                );
+                if (null != result) {
+                  await _preferences.setOffsetOfTouchTimestamp(result);
+                  _refresh();
+                }
+              },
               icon: const Icon(Icons.timer),
-              label: Text(_preferences == null
-                  ? "Loading..."
-                  : "${_preferences.offsetOfTouchTimestampMilliseconds} ms"),
+              label:
+                  Text("${_preferences.offsetOfTouchTimestampMilliseconds} ms"),
+            ),
+          ),
+          invListTile(
+            "Modify BPM by dragging",
+            FlatButton.icon(
+              onPressed: () async {
+                await _preferences.setUseBPMdrag(!_preferences.useBPMdrag);
+                _refresh();
+              },
+              icon: _preferences.useBPMdrag
+                  ? const Icon(Icons.radio_button_checked)
+                  : const Icon(Icons.radio_button_unchecked),
+              label: _preferences.useBPMdrag
+                  ? const Text("Drag BPM: On")
+                  : const Text("Drag BPM: Off"),
+            ),
+          ),
+          invListTile(
+            "BPM dragging scale: ${_preferences.dragBPMscale.toStringAsFixed(1)}",
+            Slider(
+              onChanged: _preferences.useBPMdrag
+                  ? (value) async {
+                      await _preferences.setDragBPMscale(value * 0.2);
+                      _refresh();
+                    }
+                  : null,
+              value: _preferences.dragBPMscale * 5.0,
+              // label: _preferences.dragBPMscale.toString(),
+              // divisions: 19,
+              max: 10.0,
+              min: 0.5,
             ),
           ),
           const Divider(),

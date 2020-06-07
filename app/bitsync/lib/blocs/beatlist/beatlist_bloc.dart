@@ -59,7 +59,7 @@ class BeatListBloc extends Bloc<BeatListEvent, BeatListState> {
               list: snapshot.documents
                   .where((element) => element.exists)
                   .map((e) => e.data)
-                  .map((e) => Beat.fromMap(e))
+                  .map((e) => Sequence.fromMap(e))
                   .toList()));
 
   void _onError() {}

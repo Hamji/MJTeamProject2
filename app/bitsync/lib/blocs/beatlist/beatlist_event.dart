@@ -16,7 +16,7 @@ class BeatListEventRequest extends BeatListEvent {
 
 class BeatListEventReceived extends BeatListEvent {
   final String uid;
-  final List<Beat> list;
+  final List<Sequence> list;
 
   BeatListEventReceived({@required this.uid, @required this.list});
 
