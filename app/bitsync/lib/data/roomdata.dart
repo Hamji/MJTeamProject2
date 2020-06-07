@@ -97,4 +97,9 @@ extension RoomDataExtension on RoomData {
   int get currentBeatIndex => this.getCurrentBeatIndex(getTimestamp());
 
   bool canEditBy(String uid) => this.public || this.master == uid;
+
+  String get beautifyID => beautifyRoomID(roomId);
 }
+
+String beautifyRoomID(String roomId) =>
+    "${roomId.substring(0, roomId.length - 6)} ${roomId.substring(roomId.length - 6, roomId.length - 3)} ${roomId.substring(roomId.length - 3)}";

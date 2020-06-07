@@ -10,4 +10,5 @@ extension BuildContextBloc on BuildContext {
   DynamicLinkBloc get dynamicLinkBloc => this.bloc<DynamicLinkBloc>();
   SequenceDesignerBloc get sequenceDesignerBloc =>
       this.bloc<SequenceDesignerBloc>();
+  UserRoomsBloc get userRoomsBloc => this.bloc<UserRoomsBloc>();
 }

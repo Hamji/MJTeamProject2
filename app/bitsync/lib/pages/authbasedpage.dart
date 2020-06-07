@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 abstract class AuthBasedPage extends StatelessWidget {
   AuthBasedPage({Key key}) : super(key: key);
 
+  /// don't use, use onAuthenticated
   @override
   Widget build(BuildContext context) => BlocBuilder<AuthBloc, AuthState>(
         bloc: context.authBloc,
@@ -26,5 +27,6 @@ abstract class AuthBasedPage extends StatelessWidget {
         },
       );
 
+  /// replace build
   Widget onAuthenticated(BuildContext context, User user);
 }

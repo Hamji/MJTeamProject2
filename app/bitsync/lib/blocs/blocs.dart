@@ -7,3 +7,4 @@ export './provider_extension.dart';
 export './room/room.dart';
 export './sequencedesigner/sequencedesigner.dart';
 export './user/user.dart';
+export './userrooms/userrooms.dart';

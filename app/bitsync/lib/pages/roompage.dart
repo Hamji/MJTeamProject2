@@ -20,14 +20,9 @@ class RoomPage extends AuthBasedPage {
   }) : super(key: key);
 
   @override
-
-  Widget build(final BuildContext context) => BlocBuilder<RoomBloc, RoomState>(
-        bloc: context.roomBloc, 
-  );
   Widget onAuthenticated(BuildContext context, User user) =>
       BlocBuilder<RoomBloc, RoomState>(
         bloc: context.roomBloc,
-
         builder: (context, state) {
           if (state is RoomStateInitial)
             context.roomBloc.add(null != onInitialize
@@ -44,13 +39,13 @@ class RoomPage extends AuthBasedPage {
             } else
               return MyScaffold(
                 appBar: AppBar(
-                  title: Text(_makeRoomId(state.roomId)),
+                  title: Text(beautifyRoomID(state.roomId)),
                 ),
                 body: Center(
                   child: Column(
                     children: [
                       Text(
-                        _makeRoomId(state.roomId),
+                        beautifyRoomID(state.roomId),
                         style: Theme.of(context).textTheme.headline3,
                       ),
                       const Text("Not Found"),
@@ -63,7 +58,7 @@ class RoomPage extends AuthBasedPage {
           } else if (state is RoomStateUpdate)
             return MyScaffold(
               appBar: AppBar(
-                title: Text(_makeRoomId(state.data.roomId)),
+                title: Text(state.data.beautifyID),
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.edit),
@@ -103,7 +98,4 @@ class RoomPage extends AuthBasedPage {
           return LoadingPage();
         },
       );
-
-  static String _makeRoomId(String roomId) =>
-      "${roomId.substring(0, 3)} ${roomId.substring(3, 6)} ${roomId.substring(6)}";
 }
