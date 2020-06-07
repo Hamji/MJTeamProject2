@@ -91,5 +91,6 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     room.startAt = timestamp;
 
     await FirestoreRefs.room(room.roomId).updateData(data);
+    print(data);
   }
 }

@@ -62,7 +62,7 @@ class RoomPage extends AuthBasedPage {
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.edit),
-                    tooltip: "Edit Sequence",
+                    tooltip: "Edit Room",
                     onPressed: state.data.canEditBy(user.uid)
                         ? () async {
                             final Sequence sequence = await Navigator.push(

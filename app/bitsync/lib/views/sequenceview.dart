@@ -60,7 +60,7 @@ class _SequenceViewState extends State<SequenceView>
             ),
           ),
           Text(
-            "${roomData.currentBeatIndex + 1} / ${roomData.current.size}",
+            "${roomData.currentBeatIndex + 1} / ${roomData.current.size}\nstartAt: ${roomData.startAt}\nduration: ${roomData.duration}",
             style: const TextStyle(color: Colors.white),
           )
         ],
