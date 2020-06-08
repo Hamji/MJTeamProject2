@@ -28,3 +28,8 @@ Firebase Settings의 Android App에 debug.keystore의 SHA 지문 추가
 - [DCDG](https://pub.dev/packages/dcdg)
 - [How to use DCDG](https://github.com/glesica/dcdg.dart/blob/master/USAGE.txt)
 - Simple Usage: Proejct directory에서 flutter pub global run dcdg --output=<FILE>
+
+
+## Build 안 될 경우
+> flutter channel master
+> flutter upgrade
